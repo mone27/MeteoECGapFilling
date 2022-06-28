@@ -1,0 +1,95 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+library(Metrics)
+library(devtools)
+#load_all() # load local package
+source("R/REddyProc_tools.R")
+source("R/utils.R")
+library(furrr)
+n_workers <- 12
+plan(multisession, workers = n_workers)
+```
+
+# Marginal Distribution Sampling (MDS)
+
+Assess the quality of the gap filling using the default algorith from `REddyProc`, one of the standard implementations.
+
+The variables used for filling gaps are, that are used according to the REddyProc default:
+
+- `SW_IN`
+- `Tair`
+- `VPD`
+
+
+
+## Load Data
+
+The data from the Eddy Covariance station in Hainich is used for the analysis
+```{r}
+hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
+hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+```
+```{r}
+meteo_vars <-
+  list(
+    "Tair" = "TA_F",
+    "SW_IN" = "SW_IN_F",
+    "LW_IN" = "LW_IN_F" ,
+    "VPD" = "VPD_F",
+    "P" = "P_F",
+    "PA" = "PA_F"
+  )
+
+meteo_qc <- c(
+  "TA_F_QC", "SW_IN_F_QC", "LW_IN_F_QC",  "VPD_F_QC", "P_F_QC", "PA_F_QC"
+)
+# Note this include the oberservations that are gap filled.
+# REddyProc doesn't work if there are gaps in the timeseries so can't remove them from the dataset
+hai <- hai_raw %>%
+    mutate(
+      Tair = na_if(TA_F, TA_F_QC !=0),
+      SW_IN = na_if(SW_IN_F, SW_IN_F_QC !=0),
+      LW_IN = na_if(LW_IN_F, LW_IN_F_QC != 0),
+      VPD = na_if(VPD_F, VPD_F_QC !=0),
+      P = na_if(P_F, P_F_QC != 0),
+      PA = na_if(PA_F, PA_F_QC != 0)
+    ) %>%
+    select(TIMESTAMP_END, !!!meteo_vars)
+```
+## Tair
+
+generate artificial gaps and then fill the data using REddyProc
+
+```{r}
+# go up to 60 days which is the maximium gap is going to be filled
+# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+gaps_lengths <-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 20, length.out = 30) %>%
+        rep(100) %>%
+        as.integer()
+```
+```{r}
+Tair_rmse <- gaps_lengths %>%
+        split_vector(n_workers) %>%
+        future_map_dfr(~gap_fill_EProc_rmse(hai, "Tair", .x))
+```
+```{r}
+Tair_rmse
+```
+
+```{r}
+Tair_rmse_stat <- Tair_rmse %>%
+  group_by(gap_length) %>%
+  summarise(mean = mean(rmse), sd = sd(rmse)) %>%
+    mutate(error_high = mean + sd, error_low = mean - sd)
+```
+```{r}
+Tair_rmse_stat %>%
+  ggplot(aes(gap_length)) +
+  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .7) +
+  geom_line(aes(y=mean))
+```
