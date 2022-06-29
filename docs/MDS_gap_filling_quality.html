@@ -470,16 +470,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree2ee9f676fa09f4c64be5ffa0f0b88230627fdbf0targetblank2ee9f67a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/2ee9f676fa09f4c64be5ffa0f0b88230627fdbf0" target="_blank">2ee9f67</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreed08cef79ff17e6bf7160638cdc6c49ec0be4df77targetblankd08cef7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/d08cef79ff17e6bf7160638cdc6c49ec0be4df77" target="_blank">d08cef7</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree2ee9f676fa09f4c64be5ffa0f0b88230627fdbf0targetblank2ee9f67a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreed08cef79ff17e6bf7160638cdc6c49ec0be4df77targetblankd08cef7a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/2ee9f676fa09f4c64be5ffa0f0b88230627fdbf0" target="_blank">2ee9f67</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/d08cef79ff17e6bf7160638cdc6c49ec0be4df77" target="_blank">d08cef7</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -487,16 +487,12 @@ Note that you need to be careful to ensure that all relevant files for the analy
 <pre><code>
 Ignored files:
     Ignored:    .Rproj.user/
-    Ignored:    cache/
 
 Untracked files:
     Untracked:  .idea/
-    Untracked:  MDS_gap_filling_quality_cache/
-    Untracked:  R/cache.R
+    Untracked:  cache/
 
 Unstaged changes:
-    Modified:   R/source_rmd.R
-    Modified:   analysis/ERA_gap_filling_quality.rmd
     Modified:   analysis/fragments/variable_assess_gapfilling.rmd
 
 </code></pre>
@@ -536,6 +532,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/d08cef79ff17e6bf7160638cdc6c49ec0be4df77/analysis/MDS_gap_filling_quality.rmd" target="_blank">d08cef7</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+<td>
+Commented version of MDS Gap Filling quaility assesemnt
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/f55aeefd119541b1073c427d144892a981c2de2b/analysis/MDS_gap_filling_quality.rmd" target="_blank">f55aeef</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+<td>
+P different from 0 (removed after because was not changing much)
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/d9c292a74e323d0cb2f9547603fa92caed0da3fe/analysis/MDS_gap_filling_quality.rmd" target="_blank">d9c292a</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+<td>
+Refactored gap filling to also save the filled data series and not only the rmse
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mone27/MeteoECGapFilling/3790a33c467b6f05d201c12b895e54b91945d79a/docs/MDS_gap_filling_quality.html" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -732,7 +796,7 @@ Basic quality assement for Tair
 </div>
 <div id="marginal-distribution-sampling-mds" class="section level1">
 <h1>Marginal Distribution Sampling (MDS)</h1>
-<p>Assess the quality of the gap filling using the default algorith from <code>REddyProc</code>, one of the standard implementations.</p>
+<p>Assess the quality of the gap filling using the default algorith from <code>REddyProc</code>, a standard implementations of meteo gap filling in the Eddy Covariance.</p>
 <p>The variables used for filling gaps are, that are used according to the REddyProc default:</p>
 <ul>
 <li>Shortwave radiation incoming <code>SW_IN</code></li>
@@ -753,7 +817,8 @@ Basic quality assement for Tair
 </div>
 <div id="instruments-accuracy" class="section level2">
 <h2>Instruments accuracy</h2>
-<p>checking the instruments installed in Hainich <a href="https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H">https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H</a></p>
+<p>In order to estimate the quality of the gap filling the RMSE is compared with the instrument accuracy for the sensors.</p>
+<p>The list of instruments available at Hainich is available at <a href="https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H">https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H</a></p>
 <table>
 <colgroup>
 <col width="15%" />
@@ -765,7 +830,7 @@ Basic quality assement for Tair
 <tr class="header">
 <th>Variable</th>
 <th>Instrument</th>
-<th>accuracy</th>
+<th>Accuracy</th>
 <th>Reference</th>
 </tr>
 </thead>
@@ -807,285 +872,667 @@ Basic quality assement for Tair
 <h2>Load Data</h2>
 <p>The data from the Eddy Covariance station in Hainich is used for the analysis.</p>
 <p>The data is from the FLUXNET 2015 release</p>
-<pre class="r"><code>hai_path &lt;- here::here(&quot;data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv&quot;)
-hai_raw &lt;- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format=&quot;%Y%m%d%H%M&quot;), TIMESTAMP_END = col_datetime(format=&quot;%Y%m%d%H%M&quot;)), na = c(&quot;-9999&quot;, &quot;-9999.99&quot;))</code></pre>
-<pre class="r"><code>meteo_vars &lt;-
-  list(
-    &quot;Tair&quot; = &quot;TA_F&quot;,
-    &quot;SW_IN&quot; = &quot;SW_IN_F&quot;,
-    &quot;LW_IN&quot; = &quot;LW_IN_F&quot; ,
-    &quot;VPD&quot; = &quot;VPD_F&quot;,
-    &quot;P&quot; = &quot;P_F&quot;,
-    &quot;PA&quot; = &quot;PA_F&quot;
-  )
-
-meteo_qc &lt;- c(
-  &quot;TA_F_QC&quot;, &quot;SW_IN_F_QC&quot;, &quot;LW_IN_F_QC&quot;,  &quot;VPD_F_QC&quot;, &quot;P_F_QC&quot;, &quot;PA_F_QC&quot;
-)
-# Note this include the oberservations that are gap filled.
-# REddyProc doesn&#39;t work if there are gaps in the timeseries so can&#39;t remove them from the dataset
-hai &lt;- hai_raw %&gt;%
-    mutate(
-      Tair = na_if(TA_F, TA_F_QC !=0),
-      SW_IN = na_if(SW_IN_F, SW_IN_F_QC !=0),
-      LW_IN = na_if(LW_IN_F, LW_IN_F_QC != 0),
-      VPD = na_if(VPD_F, VPD_F_QC !=0),
-      P = na_if(P_F, P_F_QC != 0),
-      PA = na_if(PA_F, PA_F_QC != 0)
-    ) %&gt;%
-    select(TIMESTAMP_END, !!!meteo_vars)</code></pre>
 </div>
 </div>
 <div id="rmse" class="section level1">
 <h1>RMSE</h1>
-<p>To have a simple test of the accuracy of the gap filling algorith artificials gaps are created and the Root Mean Square Error (RMSE) is computed. In particular:</p>
+<p>To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and the Root Mean Square Error (RMSE) is computed.</p>
+<p>For each of the variable of interest:</p>
 <ul>
-<li>3000 gaps with a random length (and starting point) are generated</li>
-<li>for the gap period RMSE is caluated generate artificial gaps and then fill the data using REddyProc</li>
+<li>300 gaps with a different length (from 1 hour to 60 days) and random location are generated</li>
+<li>the gaps are filled using <code>REddyProc</code></li>
+<li>for the gap period RMSE is calculated</li>
 </ul>
+<p>generate artificial gaps and then fill the data using REddyProc</p>
 <div id="tair" class="section level2">
 <h2>Tair</h2>
-<pre class="r"><code># go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths &lt;-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %&gt;%
-        rep(n_rep) %&gt;%
-        as.integer()
-
-Tair_rmse &lt;-
-suppressWarnings({
-    suppressMessages({
-        cache_rds({gaps_lengths %&gt;%
-            split_vector(n_workers) %&gt;%
-            future_map_dfr(~gap_fill_EProc_rmse(hai, &quot;Tair&quot;, .x), .options = furrr_options(seed = TRUE))
-         }, file = &quot;Tair&quot;)
-     })
- })
-
-Tair_rmse_stat &lt;- cache_rds({
-    Tair_rmse %&gt;%
-      group_by(gap_length) %&gt;%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %&gt;%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = &quot;Tair_stat&quot;)</code></pre>
-<pre class="r"><code>Tair_rmse_stat %&gt;%
-  mutate(gap_length = gap_length / 2) %&gt;%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = &quot;Gap Lengths [hours]&quot;, y = &quot;RMSE [°C]&quot;)</code></pre>
+<p>The mean RMSE for the temperature ranges between 2 and 5 °C. This can be considered an high, given that the instrument accuracy is 0.1 °C. Moreover, temperature is very important variable for the ecosystem, but also has good temporal autocorrelation which should simplify gap filling.</p>
 <div class="figure" style="text-align: center">
 <img src="figure/MDS_gap_filling_quality.rmd/Tair_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
 <p class="caption">
 Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
 </p>
 </div>
-<pre class="r"><code>Tair_rmse %&gt;%
-    filter(gap_length %in% c(4, 41, 322, 1167)) %&gt;% # select as sample 4 different gaps
-    ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = &quot;bin&quot;, bins=12, alpha = 0.5) +
-        facet_wrap(~gap_length) +
-        labs(y = &quot;RMSE [°C]&quot;)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Tair_plot_rmse-1">
+Past versions of Tair_plot_rmse-1.png
+</button>
+</p>
+<div id="fig-Tair_plot_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/Tair_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths" width="672" />
+<img src="figure/MDS_gap_filling_quality.rmd/Tair_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths (in hours)" width="672" />
 <p class="caption">
-Distrubution of RMSE for a sample of gap lengths
+Distrubution of RMSE for a sample of gap lengths (in hours)
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Tair_plot_dist_rmse-1">
+Past versions of Tair_plot_dist_rmse-1.png
+</button>
+</p>
+<div id="fig-Tair_plot_dist_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_dist_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-11-1.png" alt="Tair distrubution" width="672" />
+<p class="caption">
+Tair distrubution
 </p>
 </div>
 </div>
 <div id="sw_in" class="section level2">
 <h2>SW_IN</h2>
-<pre class="r"><code># go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths &lt;-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %&gt;%
-        rep(n_rep) %&gt;%
-        as.integer()
-
-SW_IN_rmse &lt;-
-suppressWarnings({
-    suppressMessages({
-        cache_rds({gaps_lengths %&gt;%
-            split_vector(n_workers) %&gt;%
-            future_map_dfr(~gap_fill_EProc_rmse(hai, &quot;SW_IN&quot;, .x), .options = furrr_options(seed = TRUE))
-         }, file = &quot;SW_IN&quot;)
-     })
- })
-
-SW_IN_rmse_stat &lt;- cache_rds({
-    SW_IN_rmse %&gt;%
-      group_by(gap_length) %&gt;%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %&gt;%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = &quot;SW_IN_stat&quot;)</code></pre>
-<pre class="r"><code>SW_IN_rmse_stat %&gt;%
-  mutate(gap_length = gap_length / 2) %&gt;%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = &quot;Gap Lengths [hours]&quot;, y = &quot;RMSE [W m-2]&quot;)</code></pre>
+<p>The incoming shortwave radiation average RMSE is 100 W m-2 This is roughly 10 times the instrument sensitivity. Incoming shortwave behaviour should also be relatively easy to predict.</p>
+<p>This should be checked how it varies across the year, the SW_IN values can be quite different between winter and summer</p>
 <div class="figure" style="text-align: center">
 <img src="figure/MDS_gap_filling_quality.rmd/SW_IN_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
 <p class="caption">
 Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
 </p>
 </div>
-<pre class="r"><code>SW_IN_rmse %&gt;%
-    filter(gap_length %in% c(4, 41, 322, 1167)) %&gt;% # select as sample 4 different gaps
-    ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = &quot;bin&quot;, bins=12, alpha = 0.5) +
-        facet_wrap(~gap_length) +
-        labs(y = &quot;RMSE [W m-2]&quot;)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-SW_IN_plot_rmse-1">
+Past versions of SW_IN_plot_rmse-1.png
+</button>
+</p>
+<div id="fig-SW_IN_plot_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/SW_IN_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths" width="672" />
+<img src="figure/MDS_gap_filling_quality.rmd/SW_IN_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths (in hours)" width="672" />
 <p class="caption">
-Distrubution of RMSE for a sample of gap lengths
+Distrubution of RMSE for a sample of gap lengths (in hours)
 </p>
 </div>
-</div>
-<div id="p" class="section level2">
-<h2>P</h2>
-<pre class="r"><code># go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths &lt;-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %&gt;%
-        rep(n_rep) %&gt;%
-        as.integer()
-
-P_rmse &lt;-
-suppressWarnings({
-    suppressMessages({
-        cache_rds({gaps_lengths %&gt;%
-            split_vector(n_workers) %&gt;%
-            future_map_dfr(~gap_fill_EProc_rmse(hai, &quot;P&quot;, .x), .options = furrr_options(seed = TRUE))
-         }, file = &quot;P&quot;)
-     })
- })
-
-P_rmse_stat &lt;- cache_rds({
-    P_rmse %&gt;%
-      group_by(gap_length) %&gt;%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %&gt;%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = &quot;P_stat&quot;)</code></pre>
-<pre class="r"><code>P_rmse_stat %&gt;%
-  mutate(gap_length = gap_length / 2) %&gt;%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = &quot;Gap Lengths [hours]&quot;, y = &quot;RMSE [mm]&quot;)</code></pre>
-<div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/P_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
-<p class="caption">
-Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-SW_IN_plot_dist_rmse-1">
+Past versions of SW_IN_plot_dist_rmse-1.png
+</button>
 </p>
+<div id="fig-SW_IN_plot_dist_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_dist_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<pre class="r"><code>P_rmse %&gt;%
-    filter(gap_length %in% c(4, 41, 322, 1167)) %&gt;% # select as sample 4 different gaps
-    ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = &quot;bin&quot;, bins=12, alpha = 0.5) +
-        facet_wrap(~gap_length) +
-        labs(y = &quot;RMSE [mm]&quot;)</code></pre>
+</div>
 <div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/P_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths" width="672" />
+<img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-12-1.png" alt="SW_IN distrubution" width="672" />
 <p class="caption">
-Distrubution of RMSE for a sample of gap lengths
-</p>
-</div>
-</div>
-<div id="pa" class="section level2">
-<h2>PA</h2>
-<pre class="r"><code># go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths &lt;-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %&gt;%
-        rep(n_rep) %&gt;%
-        as.integer()
-
-PA_rmse &lt;-
-suppressWarnings({
-    suppressMessages({
-        cache_rds({gaps_lengths %&gt;%
-            split_vector(n_workers) %&gt;%
-            future_map_dfr(~gap_fill_EProc_rmse(hai, &quot;PA&quot;, .x), .options = furrr_options(seed = TRUE))
-         }, file = &quot;PA&quot;)
-     })
- })
-
-PA_rmse_stat &lt;- cache_rds({
-    PA_rmse %&gt;%
-      group_by(gap_length) %&gt;%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %&gt;%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = &quot;PA_stat&quot;)</code></pre>
-<pre class="r"><code>PA_rmse_stat %&gt;%
-  mutate(gap_length = gap_length / 2) %&gt;%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = &quot;Gap Lengths [hours]&quot;, y = &quot;RMSE [Pa]&quot;)</code></pre>
-<div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/PA_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
-<p class="caption">
-Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
-</p>
-</div>
-<pre class="r"><code>PA_rmse %&gt;%
-    filter(gap_length %in% c(4, 41, 322, 1167)) %&gt;% # select as sample 4 different gaps
-    ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = &quot;bin&quot;, bins=12, alpha = 0.5) +
-        facet_wrap(~gap_length) +
-        labs(y = &quot;RMSE [Pa]&quot;)</code></pre>
-<div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/PA_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths" width="672" />
-<p class="caption">
-Distrubution of RMSE for a sample of gap lengths
+SW_IN distrubution
 </p>
 </div>
 </div>
 <div id="vpd" class="section level2">
 <h2>VPD</h2>
-<pre class="r"><code># go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths &lt;-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %&gt;%
-        rep(n_rep) %&gt;%
-        as.integer()
-
-VPD_rmse &lt;-
-suppressWarnings({
-    suppressMessages({
-        cache_rds({gaps_lengths %&gt;%
-            split_vector(n_workers) %&gt;%
-            future_map_dfr(~gap_fill_EProc_rmse(hai, &quot;VPD&quot;, .x), .options = furrr_options(seed = TRUE))
-         }, file = &quot;VPD&quot;)
-     })
- })
-
-VPD_rmse_stat &lt;- cache_rds({
-    VPD_rmse %&gt;%
-      group_by(gap_length) %&gt;%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %&gt;%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = &quot;VPD_stat&quot;)</code></pre>
-<pre class="r"><code>VPD_rmse_stat %&gt;%
-  mutate(gap_length = gap_length / 2) %&gt;%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = &quot;Gap Lengths [hours]&quot;, y = &quot;RMSE [Pa]&quot;)</code></pre>
+<p>The Vapour Pressure Deficit is calculated as the difference from the saturation vapour pressure (<code>e_s</code>) and the actual vapour pressure(<code>e_a</code>). So we are using the formula to estimate the accuracy of the instruments relative to the <code>VPD</code></p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">vpd_acc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">12.33</td>
+</tr>
+</tbody>
+</table>
+<p>This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfying.</p>
 <div class="figure" style="text-align: center">
 <img src="figure/MDS_gap_filling_quality.rmd/VPD_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
 <p class="caption">
 Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
 </p>
 </div>
-<pre class="r"><code>VPD_rmse %&gt;%
-    filter(gap_length %in% c(4, 41, 322, 1167)) %&gt;% # select as sample 4 different gaps
-    ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = &quot;bin&quot;, bins=12, alpha = 0.5) +
-        facet_wrap(~gap_length) +
-        labs(y = &quot;RMSE [Pa]&quot;)</code></pre>
-<div class="figure" style="text-align: center">
-<img src="figure/MDS_gap_filling_quality.rmd/VPD_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths" width="672" />
-<p class="caption">
-Distrubution of RMSE for a sample of gap lengths
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-VPD_plot_rmse-1">
+Past versions of VPD_plot_rmse-1.png
+</button>
 </p>
+<div id="fig-VPD_plot_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/VPD_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths (in hours)" width="672" />
+<p class="caption">
+Distrubution of RMSE for a sample of gap lengths (in hours)
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-VPD_plot_dist_rmse-1">
+Past versions of VPD_plot_dist_rmse-1.png
+</button>
+</p>
+<div id="fig-VPD_plot_dist_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_dist_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-13-1.png" alt="VPD distrubution" width="672" />
+<p class="caption">
+VPD distrubution
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-13-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-13-1.png" target="_blank">af4f8db</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="p" class="section level2">
+<h2>P</h2>
+<p>The Precipitation is a hard variable to gap fill, because is erratic and has a limited connection with the other variables.</p>
+<p>The precipitation has a high number of 0 this likely is the reason for the good RMSE.</p>
+<p>Comparing sums over a period of time may be a better way to assess precipitations than the point-wise RMSE</p>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/P_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
+<p class="caption">
+Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-P_plot_rmse-1">
+Past versions of P_plot_rmse-1.png
+</button>
+</p>
+<div id="fig-P_plot_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/P_plot_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/P_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths (in hours)" width="672" />
+<p class="caption">
+Distrubution of RMSE for a sample of gap lengths (in hours)
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-P_plot_dist_rmse-1">
+Past versions of P_plot_dist_rmse-1.png
+</button>
+</p>
+<div id="fig-P_plot_dist_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/P_plot_dist_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" alt="P distrubution" width="672" />
+<p class="caption">
+P distrubution
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">af4f8db</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/2ca7842a901dbc9313f1acbca75f590966e3322a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">2ca7842</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="pa" class="section level2">
+<h2>PA</h2>
+<p>The mean RMSE for the Air Pressure ranges between 0.5 and 1 hPa, which is roughly 3 times the instrument accuracy.</p>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/PA_plot_rmse-1.png" alt="Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev" width="672" />
+<p class="caption">
+Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PA_plot_rmse-1">
+Past versions of PA_plot_rmse-1.png
+</button>
+</p>
+<div id="fig-PA_plot_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/PA_plot_dist_rmse-1.png" alt="Distrubution of RMSE for a sample of gap lengths (in hours)" width="672" />
+<p class="caption">
+Distrubution of RMSE for a sample of gap lengths (in hours)
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PA_plot_dist_rmse-1">
+Past versions of PA_plot_dist_rmse-1.png
+</button>
+</p>
+<div id="fig-PA_plot_dist_rmse-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_dist_rmse-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-15-1.png" alt="PA distrubution" width="672" />
+<p class="caption">
+PA distrubution
+</p>
+</div>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-15-1.png" target="_blank">3790a33</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-15-1.png" target="_blank">af4f8db</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <br>
 <p>
@@ -1094,7 +1541,6 @@ Distrubution of RMSE for a sample of gap lengths
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.1.3 (2022-03-10)
 Platform: x86_64-redhat-linux-gnu (64-bit)
 Running under: Fedora Linux 36 (Workstation Edition)
