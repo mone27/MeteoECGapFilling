@@ -101,7 +101,7 @@ hai <- hai_raw %>%
 
 # RMSE
 
-To have a simple test of the accuracy of the gap filling algorith artificials gaps are created and the Root Mean Square Error (RMSE) is computed.
+To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and the Root Mean Square Error (RMSE) is computed.
 
 For each of the variable of interest:
 
@@ -134,7 +134,7 @@ knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "SW_IN"
 ```
 ## VPD
 
-The Vapour Pressure Deficit is calcuated as the difference from the saturation vapour pressure (`e_s`) and the actual vapour pressure(`e_a`).
+The Vapour Pressure Deficit is calculated as the difference from the saturation vapour pressure (`e_s`) and the actual vapour pressure(`e_a`).
 So we are using the formula to estimate the accuracy of the instruments relative to the `VPD`
 
 ```{r}
@@ -149,19 +149,21 @@ hai %>%
            e_a_acc = rh2ea(rh_acc, e_s), # .8 is the accuracy of the instrument
            vpd_acc = get_vpd(e_s, e_a_acc)
     ) %>%
-summarize(vpd_acc = mean(vpd_acc) %>%  round(2))
+summarize(vpd_acc = mean(vpd_acc) %>%  round(2)) %>%
+knitr::kable()
 ```
 
-This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfing.
+This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfying.
+
 ```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="Pa")
+knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="hPa")
 ```
 
 ## P
 
-The Precipitation is an hard variable to gap fill, because is erratic and has a limited connection with the other variables.
+The Precipitation is a hard variable to gap fill, because is erratic and has a limited connection with the other variables.
 
-The good overall RMSE value is due to the high number of observations where P is 0.
+The precipitation has a high number of 0 this likely is the reason for the good RMSE.
 
 Comparing sums over a period of time may be a better way to assess precipitations than the point-wise RMSE
 
@@ -169,42 +171,13 @@ Comparing sums over a period of time may be a better way to assess precipitation
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", unit="mm")
 ```
 
-### Precipation different from 0
 
-```{r}
-P_filled %>%
-  reduce(bind_rows) %>%
-  ggplot() +
-    geom_freqpoly(aes(P))
-```
-
-```{r}
-P_filled_n0 <- P_filled %>%
-  map( . %>% filter(P > 0))
-
-P_rmse_n0 <- cache_rds({
-  P_filled_n0 %>%
-    map_dfr(gap_rmse, "P")
-}, file = "P_rmse_n0")
-
-P_rmse_stat_n0 <- cache_rds({
-    P_rmse %>%
-      group_by(gap_length) %>%
-      summarise(mean = mean(rmse), sd = sd(rmse)) %>%
-        mutate(error_high = mean + sd, error_low = mean - sd)
-}, file = "P_stat_n0")
-```
-```{r, P_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
-P_rmse_stat_n0 %>%
-  mutate(gap_length = gap_length / 2) %>%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
-  geom_line(aes(y=mean)) +
-  labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]", title = "P")
-```
 ## PA
+
+The mean RMSE for the Air Pressure ranges between 0.5 and 1 hPa, which is roughly 3 times the instrument accuracy.
+
 ```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="Pa")
+knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="hPa")
 ```
 
 
