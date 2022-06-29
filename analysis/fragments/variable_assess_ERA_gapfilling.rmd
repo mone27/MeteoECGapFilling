@@ -1,0 +1,49 @@
+```{r, {{var}}_calc, message = FALSE}
+
+# go up to 60 days which is the maximium gap is going to be filled
+# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+gaps_lengths <-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %>%
+        rep(n_rep) %>%
+        as.integer()
+
+{{var}}_filled <-
+suppressWarnings({
+    suppressMessages({
+        cache_rds({
+          gaps_lengths %>%
+            split_vector(n_workers) %>%
+            future_map(~gap_fill_random_gap_EProc_vec(site_data, "{{var}}", .x), .options = furrr_options(seed = TRUE)) %>%
+            flatten()
+         }, file = "{{var}}_filled")
+     })
+ })
+
+{{var}}_rmse <- cache_rds({
+  {{var}}_filled %>%
+    map_dfr(gap_rmse, "{{var}}")
+}, file = "{{var}}_rmse")
+
+{{var}}_rmse_stat <- cache_rds({
+    {{var}}_rmse %>%
+      group_by(gap_length) %>%
+      summarise(mean = mean(rmse), sd = sd(rmse)) %>%
+        mutate(error_high = mean + sd, error_low = mean - sd)
+}, file = "{{var}}_stat")
+```
+```{r, {{var}}_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
+{{var}}_rmse_stat %>%
+  mutate(gap_length = gap_length / 2) %>%
+  ggplot(aes(gap_length)) +
+  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
+  geom_line(aes(y=mean)) +
+  labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]", title = "{{var}}")
+```
+```{r, {{var}}_plot_dist_rmse, fig.cap = "Distrubution of RMSE for a sample of gap lengths (in hours)"}
+{{var}}_rmse %>%
+    filter(gap_length %in% c(4, 41, 322, 1167)) %>% # select as sample 4 different gaps
+    mutate(gap_length = gap_length / 2) %>%
+    ggplot(aes(rmse)) +
+        geom_area(aes(y = ..density..), stat = "bin", bins=12, alpha = 0.5) +
+        facet_wrap(~gap_length) +
+        labs(x = "RMSE [{{unit}}]", title = "{{var}}")
+```

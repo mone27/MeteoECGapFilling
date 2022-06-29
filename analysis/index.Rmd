@@ -8,5 +8,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-- (MDS Gap filling quality)[MDS_gap_filling_quality.html]
-- (variable exploration)[variable_exploration.html]
+Notebooks:
+
+- [MDS Gap filling quality](MDS_gap_filling_quality.html)
+- [ERA Gap filling quality](ERA_gap_filling_quality.html)
+- [variable exploration](variable_exploration.html)

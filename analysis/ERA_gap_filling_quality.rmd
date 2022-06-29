@@ -23,11 +23,85 @@ list.files(here::here("R"), full.names = TRUE) %>%
 ```
 
 ```{r}
+meteo_vars <-
+  list(
+    "TA" = "TA_F",
+    "SW_IN" = "SW_IN_F",
+    "LW_IN" = "LW_IN_F" ,
+    "VPD" = "VPD_F",
+    "P" = "P_F",
+    "PA" = "PA_F"
+  )
+
+meteo_vars_eta <- names(meteo_vars) %>%
+        paste0("_ERA")
+
 hai_era_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_ERAI_HH_1989-2014_1-4.csv")
 hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
-hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
-hai_era_raw <- read_csv(hai_era_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+site <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99")) %>%
+        select(TIMESTAMP_END, !!!meteo_vars)
+
+site_era <- read_csv(hai_era_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99")) %>%
+        select(TIMESTAMP_END, !!!meteo_vars_eta)
+
+site <- site %>%
+        left_join(site_era, by = "TIMESTAMP_END")
 ```
 ```{r}
-read_csv(hai_era_path, n_max = 100)
+# calculate RMSE for each variable
+walk(seq_along(meteo_vars), function(i){
+  var_name <- names(meteo_vars)[[i]]
+  var_name_eta <- paste0(var_name, "_ERA")
+  site <<- site %>%
+          mutate("{var_name}_rmse" := rmse(!!sym(var_name), !!sym(var_name_eta)))
+})
+```
+
+
+## TA
+```{r}
+site %>%
+    ggplot(aes(TA)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE TA [°C]")
+```
+
+## SW_IN
+```{r}
+site %>%
+    ggplot(aes(SW_IN)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE SW_IN [W m-2]")
+```
+
+## LW_IN
+```{r}
+site %>%
+    ggplot(aes(LW_IN)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE LW_IN [W m-2]")
+```
+
+## VPD
+```{r}
+site %>%
+    ggplot(aes(VPD)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE VPD [hPa]")
+```
+
+## P
+```{r}
+site %>%
+    ggplot(aes(P)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE P [mm]")
+```
+
+## PA
+```{r}
+site %>%
+    ggplot(aes(PA)) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "RMSE PA [hPa]")
 ```
