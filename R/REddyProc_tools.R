@@ -23,34 +23,28 @@ random_gap <- function(gap_length, total_length) {
   )
 }
 
-#' Fill an artificially created gap of the given length and calculate RMSE
+#' Creates a random gap of given length and fill it
+gap_fill_random_gap_EProc <- function(data, var, gap_length) {
+  data_gap <- data %>%
+    mutate(gap = random_gap(gap_length, nrow(data)))
+  filled <- data_gap %>%
+    fill_gaps_EProc(var)
+
+  bind_cols(data_gap, filled) %>%
+    filter(gap !=0 ) %>%  # the interesting part is only where there is the gap
+    mutate(gap_length = gap_length)
+}
+
+#' Vectorized version of gap legths
+gap_fill_random_gap_EProc_vec <- function(data, var, gap_lengths){
+  map(gap_lengths, ~gap_fill_random_gap_EProc(data, var, .x))
+}
+
+#' calculate RMSE or gap filled data
 #' @param data
 #' @param var variable to gap fill
 #' @param gap_length the lenght of the gap
-gap_fill_EProc_rmse_single <- function(data, var, gap_length){
-   data_gap <- data %>%
-      mutate(gap = random_gap(gap_length , nrow(.)))
-  filled <- data_gap %>%
-      fill_gaps_EProc(var)
-  # some rlang magic needed to have filter() working properly (as it doesn't work with string variable names) with var being a string
-  var_fqc <- sym(str_glue("{var}_fqc"))
-  var_f <- sym(str_glue("{var}_f"))
-
-  var_filled <- filled %>%
-      filter(!!var_fqc != 0) %>%
-      pull(!!var_f)
-
-  var_orig <- data_gap %>%
-      filter(gap != 0) %>%
-      pull(!!var)
-
-  tibble(
-      rmse = rmse(var_orig, var_filled),
-      gap_length = gap_length
-  )
-}
-
-#' Vectorized version
-gap_fill_EProc_rmse <- function(data, var, gap_lengths){
-  map_dfr(gap_lengths, ~gap_fill_EProc_rmse_single(data, var, .x))
+gap_rmse <- function(data, var){
+  data %>%
+    summarize(gap_length = gap_length, rmse = rmse(!!sym(var), !!sym(str_glue("{var}_f"))))
 }

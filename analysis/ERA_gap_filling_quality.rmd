@@ -1,22 +1,33 @@
 ---
-title: "R Notebook"
+title: "ERA 5 Gap Filling quality Assessment"
 output: html_notebook
 ---
 
-The [R plugin](https://www.jetbrains.com/help/pycharm/r-plugin-support.html) for IntelliJ-based IDEs provides
-handy capabilities to work with the [R Markdown](https://www.jetbrains.com/help/pycharm/r-markdown.html) files.
-To [add](https://www.jetbrains.com/help/pycharm/r-markdown.html#add-code-chunk) a new R chunk,
-position the caret at any line or the code chunk, then click "+".
-
-The code chunk appears:
 ```{r}
+library(tidyverse)
+theme_set(theme_bw())
+library(Metrics)
+library(lubridate)
+library(xfun)
+# parallel execution
+library(furrr)
+n_workers <- 11
+plan(multisession, workers = n_workers)
+
+# number repetition for each gap
+n_rep <-  10
+
+#load_all() doesn't works with futures, so loading only code in R dir
+list.files(here::here("R"), full.names = TRUE) %>%
+  walk(source)
 ```
 
-Type any R code in the chunk, for example:
 ```{r}
-mycars <- within (mtcars, {cyl <- ordered (cyl)})
-mycars
+hai_era_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_ERAI_HH_1989-2014_1-4.csv")
+hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
+hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+hai_era_raw <- read_csv(hai_era_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
 ```
-
-Now, click the **Run** button on the chunk toolbar to [execute](https://www.jetbrains.com/help/pycharm/r-markdown.html#run-r-code) the chunk code. The result should be placed under the chunk.
-Click the **Knit and Open Document** to build and preview an output.
+```{r}
+read_csv(hai_era_path, n_max = 100)
+```

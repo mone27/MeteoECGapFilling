@@ -14,16 +14,16 @@ source_rmd <- function(file_path = NULL, text = NULL) {
     rlang::abort("Either file_path or text needs to be non NULL")
   }
 
-  .tmpfile <- tempfile(fileext = ".R")
-  rlang::inform(stringr::str_glue("Sourcing from {.tmpfile}"))
-  .con <- file(.tmpfile) 
-  on.exit(close(.con))
+  tmpfile <- tempfile(fileext = ".R")
+  rlang::inform(stringr::str_glue("Sourcing from {tmpfile}"))
+  con <- file(tmpfile)
+  on.exit(close(con))
 
   codes <- stringr::str_match_all(string = full_rmd, pattern = "```(?s)\\{r[^{}]*\\}\\s*\\n(.*?)```")
   stopifnot(length(codes) == 1 && ncol(codes[[1]]) == 2)
   codes <- paste(codes[[1]][, 2], collapse = "\n")
-  writeLines(codes, .con)
-  flush(.con)
-  cat(sprintf("R code extracted to tempfile: %s\nSourcing tempfile...", .tmpfile))
-  source(.tmpfile)
+  writeLines(codes, con)
+  flush(con)
+
+  source(tmpfile)
 }
