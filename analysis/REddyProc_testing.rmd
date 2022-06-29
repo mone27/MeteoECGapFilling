@@ -1,0 +1,244 @@
+---
+title: "REddYProc Testing"
+output: html_notebook
+---
+
+REddyProc is a standard implementation of the gap filling algorithm for fluxes and meteo data.
+
+in this notebook we are trying to understand how it works and how can be used
+
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+library(Metrics)
+```
+
+# Example
+
+this is the example from their Readme
+```{r}
+
+
+library(REddyProc)
+#+++ Input data from csv (example needs to be downloaded)
+examplePath <- getExamplePath('Example_DETha98.txt', isTryDownload = TRUE)
+if (length(examplePath)) {
+  EddyData <- fLoadTXTIntoDataframe(examplePath)
+} else {
+  warning(
+      "Could not find example text data file."
+      ," In order to execute this example code,"
+      ," please, allow downloading it from github. "
+      ," Type '?getExamplePath' for more information.")
+  # using RData version distributed with the package instead
+  EddyData <- Example_DETha98
+}
+#+++ If not provided, calculate VPD from Tair and rH
+EddyData$VPD <- fCalcVPDfromRHandTair(EddyData$rH, EddyData$Tair)
+#+++ Add time stamp in POSIX time format
+EddyDataWithPosix <- EddyData %>%
+  filterLongRuns("NEE") %>%
+  fConvertTimeToPosix('YDH', Year = 'Year', Day = 'DoY', Hour = 'Hour')
+#+++ Initalize R5 reference class sEddyProc for processing of eddy data
+#+++ with all variables needed for processing later
+EProc <- sEddyProc$new(
+  'DE-Tha', EddyDataWithPosix, c('NEE','Rg','Tair','VPD', 'Ustar'))
+#Location of DE-Tharandt
+EProc$sSetLocationInfo(LatDeg = 51.0, LongDeg = 13.6, TimeZoneHour = 1)
+#
+#++ Fill NEE gaps with MDS gap filling algorithm (without prior ustar filtering)
+EProc$sMDSGapFill('NEE', FillAll = FALSE)
+#
+#++ Export gap filled and partitioned data to standard data frame
+FilledEddyData <- EProc$sExportResults()
+#
+#++ Example plots of filled data to screen or to directory \plots
+EProc$sPlotFingerprintY('NEE_f', Year = 1998)
+```
+# FLuxnet data
+```{r}
+hai_path <- here::here("../data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
+```
+```{r}
+hai <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+```
+should consider removing gap filled data from here
+
+
+```{r}
+meteo_vars <-
+  list(
+    "Tair" = "TA_F",
+    "SW_IN" = "SW_IN_F",
+    "LW_IN" = "LW_IN_F" ,
+    "VPD" = "VPD_F",
+    "P" = "P_F",
+    "PA" = "PA_F"
+  )
+
+meteo
+hai <- hai %>%
+  select(TIMESTAMP_END, !!!meteo_vars)
+```
+```{r}
+EProc_hai <- sEddyProc$new("de-HAI", Data = hai, ColNames = names(meteo_vars), ColPOSIXTime = "TIMESTAMP_END")
+```
+```{r}
+# This takes long 
+#EProc_hai$sMDSGapFill("Tair", V1 = "SW_IN", V2 = "VPD", V3 = "Tair")
+```
+```{r}
+EProc_hai$sExportResults()
+```
+
+```{r}
+227952 / 100
+```
+```{r}
+create_gap <- function(data, var, gap_length){
+  gap <- random_gap(gap_length, nrow(data))
+  data[gap, var] <- NA
+  data
+}
+```
+```{r}
+random_gap <- function(gap_length, total_length) {
+  # constructing an array to indetify gaps
+  # it should be always false (no gap) except for a continous section of lenght `gap_length`
+  if(gap_length >= total_length){
+    return(rep(1, total_length))
+  }
+  gap_length <- ifelse(gap_length > total_length, total_length, gap_length)
+  gap_start <- sample.int(total_length - gap_length, 1) # gap cannot start too close to the end
+  c(
+          rep(0, gap_start),
+          rep(1, gap_length),
+          rep(0, total_length - (gap_length + gap_start))
+  )
+}
+```
+
+
+In order to have REddyProc understand the gaps properly an additional column with a mask of where the gaps are is needed.
+Then this is the argument of `QFVar` and then value of the mask for which there is **no** gap is then passed as `QFValue`
+
+
+
+```{r}
+fill_gaps_eddy_proc <- function(data, var, id = "ID"){
+  EProc <- sEddyProc$new(id, Data = data, ColNames = names(select(data, -TIMESTAMP_END)), ColPOSIXTime = "TIMESTAMP_END")
+  EProc$sMDSGapFill(var, QFVar = "gap", QFValue = 0, V1 = "SW_IN", V2 = "VPD", V3 = "Tair", FillAll = FALSE)
+  EProc$sExportResults()
+}
+```
+
+```{r}
+hai %>%
+  mutate(gap = random_gap(100, nrow(.))) %>%
+  fill_gaps_eddy_proc("Tair")
+```
+
+```{r}
+gap_fill_EProc_rmse_single <- function(data, var, gap_length){
+   data_gap <- data %>%
+      mutate(gap = random_gap(gap_length , nrow(.)))
+  filled <- data_gap %>%
+      fill_gaps_eddy_proc(var)
+  # some rlang magic needed to have filter() working properly (as it doesn't work with string variable names) with var being a string
+  var_fqc <- sym(str_glue("{var}_fqc"))
+  var_f <- sym(str_glue("{var}_f"))
+
+  var_filled <- filled %>%
+      filter(!!var_fqc != 0) %>%
+      pull(!!var_f)
+
+  var_orig <- data_gap %>%
+      filter(gap != 0) %>%
+      pull(!!var)
+
+  tibble(
+      rmse = rmse(var_orig, var_filled),
+      gap_length = gap_length
+  )
+}
+
+#' vectorized version
+gap_fill_EProc_rmse <- function(data, var, gap_lengths){
+  map_dfr(gap_lengths, ~gap_fill_EProc_rmse_single(data, var, .x))
+}
+```
+
+
+
+```{r}
+gap_fill_EProc_rmse_single(hai, "Tair", 1000)
+```
+
+## Test different gaps
+
+```{r}
+gaps_lengths <- exp(seq(log(3), log(24*2*60), length.out = 30)) %>% # log scale for different lenghts
+        rep(100) %>%
+        as.integer()
+rmse <- gaps_lengths %>% 
+  map_dfr(~gap_RMSE(hai, "Tair",.x))
+```
+
+```{r}
+rmse
+```
+
+```{r}
+rmse_stat <- rmse %>%
+  group_by(gap_length) %>%
+  summarise(mean = mean(rmse), sd = sd(rmse))
+
+```
+
+```{r}
+rmse_stat %>%
+  filter
+```
+
+```{r}
+rmse_stat %>%
+  ggplot(aes(gap_length, mean)) +
+  geom_line()
+
+```
+
+
+
+
+```{r}
+rmse %>%
+  ggplot(aes(gap_length, rmse)) +
+  geom_point()
+
+```
+
+```{r}
+gaps_lengths[1:30]
+```
+
+```{r}
+rmse %>%
+  filter(!gap_length %in% c(4,6,7,15,19)) %>% #remove some values for better plotting
+  mutate(gaps_length = factor(gap_length)) %>%
+  ggplot(aes(gap_length, rmse, group = gap_length)) +
+  geom_violin()
+```
+
+# Tests
+
+```{r}
+library(testthat)
+```
+```{r}
+test_that("total lenght",{
+          expect_equal(length(get_random_gap(10, 100)), 100)
+}
+
+)
+```
+

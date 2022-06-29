@@ -1,22 +1,27 @@
----
-title: "R Notebook"
-output: html_notebook
----
-
-The [R plugin](https://www.jetbrains.com/help/pycharm/r-plugin-support.html) for IntelliJ-based IDEs provides
-handy capabilities to work with the [R Markdown](https://www.jetbrains.com/help/pycharm/r-markdown.html) files.
-To [add](https://www.jetbrains.com/help/pycharm/r-markdown.html#add-code-chunk) a new R chunk,
-position the caret at any line or the code chunk, then click "+".
-
-The code chunk appears:
 ```{r}
-```
+cache_rds({
+  # go up to 60 days which is the maximium gap is going to be filled
+    # 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+    gaps_lengths <-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %>%
+            rep(n_rep) %>%
+            as.integer()
 
-Type any R code in the chunk, for example:
+    {{var}}_rmse <- gaps_lengths %>%
+            split_vector(n_workers) %>%
+            future_map_dfr(~gap_fill_EProc_rmse(hai, "{{var}}", .x))
+
+    {{var}}_rmse_stat <- {{var}}_rmse %>%
+      group_by(gap_length) %>%
+      summarise(mean = mean(rmse), sd = sd(rmse)) %>%
+        mutate(error_high = mean + sd, error_low = mean - sd)
+})
+
+```
 ```{r}
-mycars <- within(mtcars, { cyl <- ordered(cyl) })
-mycars
+{{var}}_rmse_stat %>%
+  mutate(gap_length = gap_length / 2) %>%
+  ggplot(aes(gap_length)) +
+  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .7) +
+  geom_line(aes(y=mean)) +
+  labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]")
 ```
-
-Now, click the **Run** button on the chunk toolbar to [execute](https://www.jetbrains.com/help/pycharm/r-markdown.html#run-r-code) the chunk code. The result should be placed under the chunk.
-Click the **Knit and Open Document** to build and preview an output.
