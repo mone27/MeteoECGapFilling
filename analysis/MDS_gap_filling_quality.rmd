@@ -14,7 +14,7 @@ n_workers <- 12
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  100
+n_rep <-  30
 
 #load_all() doesn't works with futures, so loading only code in R dir
 list.files("R", full.names = TRUE) %>%
@@ -35,7 +35,9 @@ The variables used for filling gaps are, that are used according to the REddyPro
 
 ## Load Data
 
-The data from the Eddy Covariance station in Hainich is used for the analysis
+The data from the Eddy Covariance station in Hainich is used for the analysis.
+
+The data is from the FLUXNET 2015 release
 ```{r}
 hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
 hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
@@ -68,9 +70,11 @@ hai <- hai_raw %>%
     select(TIMESTAMP_END, !!!meteo_vars)
 ```
 
+generate artificial gaps and then fill the data using REddyProc
+
 ## Tair
 
-generate artificial gaps and then fill the data using REddyProc
+
 
 ```{r}
 # go up to 60 days which is the maximium gap is going to be filled
@@ -103,20 +107,32 @@ Tair_rmse_stat %>%
   labs(x = "Gap Lengths [hours]", y = "RMSE [°C]")
 ```
 ## SW_IN
-```{r, message = FALSE}
+```{r, results = 'asis'}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
 
 ## P
-```{r, message = FALSE}
+```{r, results = 'asis'}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", unit="mm")
 ```
 
 ## PA
-```{r, message = FALSE}
+```{r, results = 'asis'}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="Pa")
 ```
 ## VPD
-```{r, message = FALSE}
+```{r, results = 'asis'}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="Pa")
 ```
+
+## Instruments accuracy
+
+checking the instruments installed in Hainich [https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H](https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H)
+
+| Variable            | Instrument      | accuracy | Reference                                                                                  |
+|---------------------|-----------------|----------|--------------------------------------------------------------------------------------------|
+| Temperature         | Vaisala HMP35   | 0.1 °C   | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
+| Humidity            | Vaisala HMP35   | 0.8% RH  |                                                                                            |
+| Pressure            | Vaisala PTB101B | 0.3 hPa  | https://www.vaisala.com/sites/default/files/documents/PTB110-Datasheet-B210681EN.pdf       |
+| Precipitation       | OTT Pluvio2     | 1mm      | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
+| Shortwave radiation | DeltaT SPN1     | 10 Wm-2  | https://delta-t.co.uk/wp-content/uploads/2016/10/SPN1-Technical-Fact-Sheet-v1.2_d_web.pdf  |
