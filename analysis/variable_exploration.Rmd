@@ -1,0 +1,64 @@
+---
+title: "Variable exploration"
+output: html_notebook
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+theme_set(theme_bw())
+library(knitr)
+library(lubridate)
+devtools::load_all()
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+```{r}
+meteo_vars <-
+  list(
+    "Tair" = "TA_F",
+    "SW_IN" = "SW_IN_F",
+    "LW_IN" = "LW_IN_F" ,
+    "VPD" = "VPD_F",
+    "P" = "P_F",
+    "PA" = "PA_F"
+  )
+
+hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
+data <- read_csv(hai_path,
+                 col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"),
+                                  TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99")) %>%
+    select(TIMESTAMP_END, !!!meteo_vars)
+
+
+```
+
+
+## Tair
+
+
+```{r, results = 'asis', message = FALSE, echo=FALSE}
+knit_template("analysis/fragments/variable_distribution.rmd", var = "Tair", unit="°C")
+```
+## SW_IN
+
+```{r, results = 'asis', echo = FALSE}
+knit_template("analysis/fragments/variable_distribution.rmd", var = "SW_IN", unit="W m-2")
+```
+## VPD
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_distribution.rmd", var = "VPD", unit="hPa")
+```
+
+## P
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_distribution.rmd", var = "P", unit="mm")
+```
+
+
+## PA
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_distribution.rmd", var = "PA", unit="hPa")
+```

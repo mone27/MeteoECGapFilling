@@ -1,0 +1,25 @@
+```{r}
+data %>%
+    summarise(
+      mean = mean({{var}}),
+      sd = sd({{var}}),
+      min = min({{var}}),
+      max = max({{var}})
+    ) %>%
+        kable()
+```
+```{r, {{var}}_dist, fig.cap = "{{var}} distribution"}
+data %>%
+    ggplot(aes({{var}})) +
+    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
+    labs(x = "{{var}} [ {{unit}} ]", title = "{{var}} distribution")
+```
+```{r, {{var}}_year_plot, fig.cap = "Distribution over year of {{var}}. Line is weekly mean, shaded area mean +/- std. dev"}
+data %>%
+    group_by(week = week(TIMESTAMP_END)) %>%
+    summarise(mean = mean({{var}}), sd = sd({{var}}), error_high = mean + sd, error_low = mean - sd) %>%
+      ggplot(aes(week)) +
+      geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
+      geom_line(aes(y=mean)) +
+      labs(x = "Week of year", y = "{{var}} [ {{unit}} ]", title = "{{var}} Year distribution")
+```

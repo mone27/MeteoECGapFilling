@@ -9,3 +9,4 @@ editor_options:
 ---
 
 - (MDS Gap filling quality)[MDS_gap_filling_quality.html]
+- (variable exploration)[variable_exploration.html]
