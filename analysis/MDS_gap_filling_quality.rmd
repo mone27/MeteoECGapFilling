@@ -1,8 +1,8 @@
 ---
-title: "R Notebook"
+title: "MDS Gap Filling Quality assessment"
 output: html_notebook
 ---
-```{r}
+```{r, include = FALSE}
 library(tidyverse)
 theme_set(theme_bw())
 library(Metrics)
@@ -10,14 +10,14 @@ library(lubridate)
 library(xfun)
 # parallel execution
 library(furrr)
-n_workers <- 12
+n_workers <- 11
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  30
+n_rep <-  100
 
 #load_all() doesn't works with futures, so loading only code in R dir
-list.files("R", full.names = TRUE) %>%
+list.files(here::here("R"), full.names = TRUE) %>%
   walk(source)
 ```
 
@@ -27,10 +27,33 @@ Assess the quality of the gap filling using the default algorith from `REddyProc
 
 The variables used for filling gaps are, that are used according to the REddyProc default:
 
-- `SW_IN`
-- `Tair`
-- `VPD`
+- Shortwave radiation incoming `SW_IN`
+- Air Temperature `Tair`
+- Vapour pressure deficit `VPD`
 
+## Analysed variables
+
+The variables that are gap filled are:
+
+- Temperature
+- Shortwave radiation incoming
+- Longwave radiation incoming
+- Vapour Pressure Deficit
+- Pressure
+- Precipitation
+
+
+## Instruments accuracy
+
+checking the instruments installed in Hainich [https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H](https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H)
+
+| Variable            | Instrument      | accuracy | Reference                                                                                  |
+|---------------------|-----------------|----------|--------------------------------------------------------------------------------------------|
+| Temperature         | Vaisala HMP35   | 0.1 °C   | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
+| Humidity            | Vaisala HMP35   | 0.8% RH  | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
+| Pressure            | Vaisala PTB101B | 0.3 hPa  | https://www.vaisala.com/sites/default/files/documents/PTB110-Datasheet-B210681EN.pdf       |
+| Precipitation       | OTT Pluvio2     | 1mm      | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
+| Shortwave radiation | DeltaT SPN1     | 10 Wm-2  | https://delta-t.co.uk/wp-content/uploads/2016/10/SPN1-Technical-Fact-Sheet-v1.2_d_web.pdf  |
 
 
 ## Load Data
@@ -38,6 +61,7 @@ The variables used for filling gaps are, that are used according to the REddyPro
 The data from the Eddy Covariance station in Hainich is used for the analysis.
 
 The data is from the FLUXNET 2015 release
+
 ```{r}
 hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
 hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
@@ -70,69 +94,38 @@ hai <- hai_raw %>%
     select(TIMESTAMP_END, !!!meteo_vars)
 ```
 
+# RMSE
+
+To have a simple test of the accuracy of the gap filling algorith artificials gaps are created and the Root Mean Square Error (RMSE) is computed.
+In particular:
+
+ - `r n_rep * 30` gaps with a random length (and starting point) are generated
+ - for the gap period RMSE is caluated
 generate artificial gaps and then fill the data using REddyProc
 
 ## Tair
 
-
-
-```{r}
-# go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths <-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 20, length.out = 30) %>%
-        rep(n_rep) %>%
-        as.integer()
-```
-```{r, message = FALSE}
-Tair_rmse <- gaps_lengths %>%
-        split_vector(n_workers) %>%
-        future_map_dfr(~gap_fill_EProc_rmse(hai, "Tair", .x), seed=TRUE)
-```
-```{r}
-Tair_rmse
+```{r, results = 'asis', message = FALSE, echo=FALSE}
+knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "Tair", unit="°C")
 ```
 
-```{r}
-Tair_rmse_stat <- Tair_rmse %>%
-  group_by(gap_length) %>%
-  summarise(mean = mean(rmse), sd = sd(rmse)) %>%
-    mutate(error_high = mean + sd, error_low = mean - sd)
-```
-```{r}
-Tair_rmse_stat %>%
-  mutate(gap_length = gap_length / 2) %>%
-  ggplot(aes(gap_length)) +
-  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .7) +
-  geom_line(aes(y=mean)) +
-  labs(x = "Gap Lengths [hours]", y = "RMSE [°C]")
-```
+
 ## SW_IN
-```{r, results = 'asis'}
+```{r, results = 'asis', echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
 
 ## P
-```{r, results = 'asis'}
+```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", unit="mm")
 ```
 
 ## PA
-```{r, results = 'asis'}
+```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="Pa")
 ```
 ## VPD
-```{r, results = 'asis'}
+```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="Pa")
 ```
 
-## Instruments accuracy
-
-checking the instruments installed in Hainich [https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H](https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H)
-
-| Variable            | Instrument      | accuracy | Reference                                                                                  |
-|---------------------|-----------------|----------|--------------------------------------------------------------------------------------------|
-| Temperature         | Vaisala HMP35   | 0.1 °C   | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
-| Humidity            | Vaisala HMP35   | 0.8% RH  |                                                                                            |
-| Pressure            | Vaisala PTB101B | 0.3 hPa  | https://www.vaisala.com/sites/default/files/documents/PTB110-Datasheet-B210681EN.pdf       |
-| Precipitation       | OTT Pluvio2     | 1mm      | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
-| Shortwave radiation | DeltaT SPN1     | 10 Wm-2  | https://delta-t.co.uk/wp-content/uploads/2016/10/SPN1-Technical-Fact-Sheet-v1.2_d_web.pdf  |
