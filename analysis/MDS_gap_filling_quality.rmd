@@ -123,23 +123,88 @@ knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "Tair",
 ```
 ## SW_IN
 
-The incoming shortwave radiation 
+The incoming shortwave radiation average RMSE is 100 W m-2
+This is roughly 10 times the instrument sensitivity.
+Incoming shortwave behaviour should also be relatively easy to predict.
+
+This should be checked how it varies across the year, the SW_IN values can be quite different between winter and summer
 
 ```{r, results = 'asis', echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
+## VPD
+
+The Vapour Pressure Deficit is calcuated as the difference from the saturation vapour pressure (`e_s`) and the actual vapour pressure(`e_a`).
+So we are using the formula to estimate the accuracy of the instruments relative to the `VPD`
+
+```{r}
+get_es <-  function(ta)  6.1078 * exp((17.08085 * ta) / (234.175 + ta))
+rh2ea <- function(rh, e_s) rh/100 * e_s
+get_vpd <- function(e_s, e_a) e_s - e_a
+
+rh_acc <- .8
+
+hai %>%
+    mutate(e_s = get_es(Tair),
+           e_a_acc = rh2ea(rh_acc, e_s), # .8 is the accuracy of the instrument
+           vpd_acc = get_vpd(e_s, e_a_acc)
+    ) %>%
+summarize(vpd_acc = mean(vpd_acc) %>%  round(2))
+```
+
+This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfing.
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="Pa")
+```
 
 ## P
+
+The Precipitation is an hard variable to gap fill, because is erratic and has a limited connection with the other variables.
+
+The good overall RMSE value is due to the high number of observations where P is 0.
+
+Comparing sums over a period of time may be a better way to assess precipitations than the point-wise RMSE
+
 ```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", unit="mm")
 ```
 
+### Precipation different from 0
+
+```{r}
+P_filled %>%
+  reduce(bind_rows) %>%
+  ggplot() +
+    geom_freqpoly(aes(P))
+```
+
+```{r}
+P_filled_n0 <- P_filled %>%
+  map( . %>% filter(P > 0))
+
+P_rmse_n0 <- cache_rds({
+  P_filled_n0 %>%
+    map_dfr(gap_rmse, "P")
+}, file = "P_rmse_n0")
+
+P_rmse_stat_n0 <- cache_rds({
+    P_rmse %>%
+      group_by(gap_length) %>%
+      summarise(mean = mean(rmse), sd = sd(rmse)) %>%
+        mutate(error_high = mean + sd, error_low = mean - sd)
+}, file = "P_stat_n0")
+```
+```{r, P_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
+P_rmse_stat_n0 %>%
+  mutate(gap_length = gap_length / 2) %>%
+  ggplot(aes(gap_length)) +
+  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
+  geom_line(aes(y=mean)) +
+  labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]", title = "P")
+```
 ## PA
 ```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="Pa")
 ```
-## VPD
-```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="Pa")
-```
+
 
