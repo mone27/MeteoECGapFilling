@@ -3,9 +3,6 @@ title: "MDS Gap Filling Quality assessment"
 output: html_notebook
 ---
 ```{r, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
-```{r, include = FALSE}
 library(tidyverse)
 theme_set(theme_bw())
 library(Metrics)
@@ -17,11 +14,15 @@ n_workers <- 11
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  10
+n_rep <-  100
 
 #load_all() doesn't works with futures, so loading only code in R dir
 list.files(here::here("R"), full.names = TRUE) %>%
   walk(source)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache.path = str_glue("cache/hai_{n_rep}/"))
 ```
 
 # Marginal Distribution Sampling (MDS)
@@ -97,6 +98,8 @@ hai <- hai_raw %>%
       PA = na_if(PA_F, PA_F_QC != 0)
     ) %>%
     select(TIMESTAMP_END, !!!meteo_vars)
+
+site_data <- hai
 ```
 
 # RMSE
@@ -121,6 +124,7 @@ Moreover, temperature is very important variable for the ecosystem, but also has
 ```{r, results = 'asis', message = FALSE, echo=FALSE}
 knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "Tair", unit="°C")
 ```
+
 ## SW_IN
 
 The incoming shortwave radiation average RMSE is 100 W m-2

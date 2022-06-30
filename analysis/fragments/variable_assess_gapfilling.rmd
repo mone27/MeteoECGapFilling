@@ -1,4 +1,4 @@
-```{r, {{var}}_calc, cache.path = "cache/", message = FALSE}
+```{r, {{var}}_calc, message = FALSE}
 
 # go up to 60 days which is the maximium gap is going to be filled
 # 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
@@ -12,7 +12,7 @@ suppressWarnings({
         cache_rds({
           gaps_lengths %>%
             split_vector(n_workers) %>%
-            future_map(~gap_fill_random_gap_EProc_vec(hai, "{{var}}", .x), .options = furrr_options(seed = TRUE)) %>%
+            future_map(~gap_fill_random_gap_EProc_vec(site_data, "{{var}}", .x), .options = furrr_options(seed = TRUE)) %>%
             flatten()
          }, file = "{{var}}_filled")
      })
@@ -30,6 +30,15 @@ suppressWarnings({
         mutate(error_high = mean + sd, error_low = mean - sd)
 }, file = "{{var}}_stat")
 ```
+
+```{r}
+tibble(
+    "Average RMSE Mean" = mean({{var}}_rmse_stat$mean),
+    "Average RMSE Sd" = mean({{var}}_rmse_stat$sd)
+) %>%
+    knitr::kable(caption="{{var}}")
+```
+
 ```{r, {{var}}_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
 {{var}}_rmse_stat %>%
   mutate(gap_length = gap_length / 2) %>%
@@ -43,13 +52,15 @@ suppressWarnings({
     filter(gap_length %in% c(4, 41, 322, 1167)) %>% # select as sample 4 different gaps
     mutate(gap_length = gap_length / 2) %>%
     ggplot(aes(rmse)) +
-        geom_area(aes(y = ..density..), stat = "bin", bins=12, alpha = 0.5) +
+        geom_histogram(aes(y = ..density..), bins=12, colour = "white") +
         facet_wrap(~gap_length) +
         labs(x = "RMSE [{{unit}}]", title = "{{var}}")
 ```
-
-```{r, fig.cap = "{{var}} distrubution"}
-hai %>%
-    ggplot(aes({{var}})) +
-    geom_freqpoly(bins = 30)
+```{r}
+{{var}}_filled %>%
+    bind_rows() %>%
+    ggplot(aes_string(x = "{{var}}", y = "{{var}}_f")) +
+    geom_hex(bins = 50) +
+    labs(x = "Measured {{var}} [{{unit}}]", y = "Gap Filled {{var}} [{{unit}}]") +
+    scale_fill_viridis_c()
 ```
