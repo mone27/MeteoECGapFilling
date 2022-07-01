@@ -379,7 +379,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-29
+<strong>Last updated:</strong> 2022-07-01
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -470,16 +470,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreef480920935850af2a890c3ed66b20b6b81e97800targetblankf480920a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/f480920935850af2a890c3ed66b20b6b81e97800" target="_blank">f480920</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreea680f63e8107958d6f0bca16d2d7364b8a5f811ftargetblanka680f63a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/a680f63e8107958d6f0bca16d2d7364b8a5f811f" target="_blank">a680f63</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreef480920935850af2a890c3ed66b20b6b81e97800targetblankf480920a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreea680f63e8107958d6f0bca16d2d7364b8a5f811ftargetblanka680f63a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/f480920935850af2a890c3ed66b20b6b81e97800" target="_blank">f480920</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/a680f63e8107958d6f0bca16d2d7364b8a5f811f" target="_blank">a680f63</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -495,8 +495,7 @@ Untracked files:
 
 Unstaged changes:
     Modified:   analysis/MDS_gap_filling_quality.rmd
-    Modified:   analysis/fragments/variable_assess_ERA_gapfilling.rmd
-    Modified:   analysis/fragments/variable_assess_gapfilling.rmd
+    Modified:   analysis/fragments/variable_assess_MDS_gapfilling.Rmd
     Deleted:    analysis/variable_distribution.rmd
 
 </code></pre>
@@ -536,6 +535,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/a680f63e8107958d6f0bca16d2d7364b8a5f811f/analysis/ERA_gap_filling_quality.rmd" target="_blank">a680f63</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-01
+</td>
+<td>
+Plots for ERA Gap filling
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mone27/MeteoECGapFilling/e2a7d9058fdce665746a60f9be8dcdcf5f42096e/docs/ERA_gap_filling_quality.html" target="_blank">e2a7d90</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -594,118 +627,100 @@ Host with GitHub.
 </div>
 </div>
 </div>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>✔ ggplot2 3.3.5     ✔ purrr   0.3.4
-✔ tibble  3.1.7     ✔ dplyr   1.0.9
-✔ tidyr   1.2.0     ✔ stringr 1.4.0
-✔ readr   2.1.2     ✔ forcats 0.5.1</code></pre>
-<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>theme_set(theme_bw())
-library(Metrics)
-library(lubridate)</code></pre>
-<pre><code>
-Attaching package: &#39;lubridate&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    date, intersect, setdiff, union</code></pre>
-<pre class="r"><code>library(xfun)</code></pre>
-<pre><code>
-Attaching package: &#39;xfun&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    attr, isFALSE</code></pre>
-<pre class="r"><code># parallel execution
-library(furrr)</code></pre>
-<pre><code>Loading required package: future</code></pre>
-<pre class="r"><code>n_workers &lt;- 11
-plan(multisession, workers = n_workers)
-
-# number repetition for each gap
-n_rep &lt;-  10
-
-#load_all() doesn&#39;t works with futures, so loading only code in R dir
-list.files(here::here(&quot;R&quot;), full.names = TRUE) %&gt;%
-  walk(source)</code></pre>
-<pre class="r"><code>meteo_vars &lt;-
-  list(
-    &quot;TA&quot; = &quot;TA_F&quot;,
-    &quot;SW_IN&quot; = &quot;SW_IN_F&quot;,
-    &quot;LW_IN&quot; = &quot;LW_IN_F&quot; ,
-    &quot;VPD&quot; = &quot;VPD_F&quot;,
-    &quot;P&quot; = &quot;P_F&quot;,
-    &quot;PA&quot; = &quot;PA_F&quot;
-  )
-
-meteo_vars_eta &lt;- names(meteo_vars) %&gt;%
-        paste0(&quot;_ERA&quot;)
-
-hai_era_path &lt;- here::here(&quot;data/FLX_DE-Hai_FLUXNET2015_ERAI_HH_1989-2014_1-4.csv&quot;)
-hai_path &lt;- here::here(&quot;data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv&quot;)
-site &lt;- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format=&quot;%Y%m%d%H%M&quot;), TIMESTAMP_END = col_datetime(format=&quot;%Y%m%d%H%M&quot;)), na = c(&quot;-9999&quot;, &quot;-9999.99&quot;)) %&gt;%
-        select(TIMESTAMP_END, !!!meteo_vars)
-
-site_era &lt;- read_csv(hai_era_path, col_types = cols(TIMESTAMP_START = col_datetime(format=&quot;%Y%m%d%H%M&quot;), TIMESTAMP_END = col_datetime(format=&quot;%Y%m%d%H%M&quot;)), na = c(&quot;-9999&quot;, &quot;-9999.99&quot;)) %&gt;%
-        select(TIMESTAMP_END, !!!meteo_vars_eta)
-
-site &lt;- site %&gt;%
-        left_join(site_era, by = &quot;TIMESTAMP_END&quot;)</code></pre>
-<pre class="r"><code># calculate RMSE for each variable
-walk(seq_along(meteo_vars), function(i){
-  var_name &lt;- names(meteo_vars)[[i]]
-  var_name_eta &lt;- paste0(var_name, &quot;_ERA&quot;)
-  site &lt;&lt;- site %&gt;%
-          mutate(&quot;{var_name}_rmse&quot; := rmse(!!sym(var_name), !!sym(var_name_eta)))
-})</code></pre>
-<div id="ta" class="section level2">
-<h2>TA</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(TA)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE TA [°C]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="tair" class="section level2">
+<h2>Tair</h2>
+<p><a href="variable_exploration.html#Tair"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>1.89 °C</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/Tair_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/Tair_plot_scatter-1.png" alt="Tair Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+Tair Measured vs ERA Downscaling using density plots.
+</p>
+</div>
 </div>
 <div id="sw_in" class="section level2">
 <h2>SW_IN</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(SW_IN)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE SW_IN [W m-2]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><a href="variable_exploration.html#SW_IN"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>76.59 W m-2</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/SW_IN_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/SW_IN_plot_scatter-1.png" alt="SW_IN Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+SW_IN Measured vs ERA Downscaling using density plots.
+</p>
 </div>
-<div id="lw_in" class="section level2">
-<h2>LW_IN</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(LW_IN)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE LW_IN [W m-2]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="vpd" class="section level2">
 <h2>VPD</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(VPD)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE VPD [hPa]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><a href="variable_exploration.html#VPD"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>2.08 hPa</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/VPD_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/VPD_plot_scatter-1.png" alt="VPD Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+VPD Measured vs ERA Downscaling using density plots.
+</p>
+</div>
 </div>
 <div id="p" class="section level2">
 <h2>P</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(P)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE P [mm]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><a href="variable_exploration.html#P"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>0.29 mm</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/P_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/P_plot_scatter-1.png" alt="P Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+P Measured vs ERA Downscaling using density plots.
+</p>
+</div>
 </div>
 <div id="pa" class="section level2">
 <h2>PA</h2>
-<pre class="r"><code>site %&gt;%
-    ggplot(aes(PA)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = &quot;white&quot;) +
-    labs(x = &quot;RMSE PA [hPa]&quot;)</code></pre>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><a href="variable_exploration.html#PA"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>0.11 hPa</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/PA_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/PA_plot_scatter-1.png" alt="PA Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+PA Measured vs ERA Downscaling using density plots.
+</p>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -713,7 +728,6 @@ walk(seq_along(meteo_vars), function(i){
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.1.3 (2022-03-10)
 Platform: x86_64-redhat-linux-gnu (64-bit)
 Running under: Fedora Linux 36 (Workstation Edition)
@@ -733,31 +747,38 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] furrr_0.2.3     future_1.24.0   xfun_0.30       lubridate_1.8.0
- [5] Metrics_0.1.4   forcats_0.5.1   stringr_1.4.0   dplyr_1.0.9    
- [9] purrr_0.3.4     readr_2.1.2     tidyr_1.2.0     tibble_3.1.7   
-[13] ggplot2_3.3.5   tidyverse_1.3.1 workflowr_1.7.0
+ [1] MeteoECGapFilling_0.0.0.9000 xfun_0.30                   
+ [3] lubridate_1.8.0              Metrics_0.1.4               
+ [5] forcats_0.5.1                stringr_1.4.0               
+ [7] dplyr_1.0.9                  purrr_0.3.4                 
+ [9] readr_2.1.2                  tidyr_1.2.0                 
+[11] tibble_3.1.7                 ggplot2_3.3.5               
+[13] tidyverse_1.3.1              workflowr_1.7.0             
 
 loaded via a namespace (and not attached):
- [1] httr_1.4.2        sass_0.4.1        bit64_4.0.5       vroom_1.5.7      
- [5] jsonlite_1.8.0    here_1.0.1        modelr_0.1.8      bslib_0.3.1      
- [9] assertthat_0.2.1  getPass_0.2-2     highr_0.9         cellranger_1.1.0 
-[13] yaml_2.3.5        globals_0.14.0    pillar_1.7.0      backports_1.4.1  
-[17] glue_1.6.2        digest_0.6.29     promises_1.2.0.1  rvest_1.0.2      
-[21] colorspace_2.0-3  htmltools_0.5.2   httpuv_1.6.5      pkgconfig_2.0.3  
-[25] broom_0.8.0       listenv_0.8.0     haven_2.4.3       scales_1.2.0     
-[29] processx_3.5.3    whisker_0.4       later_1.3.0       tzdb_0.3.0       
-[33] git2r_0.30.1      farver_2.1.0      generics_0.1.2    ellipsis_0.3.2   
-[37] withr_2.5.0       cli_3.3.0         magrittr_2.0.3    crayon_1.5.1     
-[41] readxl_1.4.0      evaluate_0.15     ps_1.6.0          fs_1.5.2         
-[45] fansi_1.0.3       parallelly_1.31.0 xml2_1.3.3        tools_4.1.3      
-[49] hms_1.1.1         lifecycle_1.0.1   munsell_0.5.0     reprex_2.0.1     
-[53] callr_3.7.0       compiler_4.1.3    jquerylib_0.1.4   rlang_1.0.3      
-[57] grid_4.1.3        rstudioapi_0.13   labeling_0.4.2    rmarkdown_2.13   
-[61] gtable_0.3.0      codetools_0.2-18  DBI_1.1.2         R6_2.5.1         
-[65] knitr_1.38        bit_4.0.4         fastmap_1.1.0     utf8_1.2.2       
-[69] rprojroot_2.0.3   stringi_1.7.6     parallel_4.1.3    Rcpp_1.0.8.3     
-[73] vctrs_0.4.1       dbplyr_2.1.1      tidyselect_1.1.2 </code></pre>
+ [1] fs_1.5.2          usethis_2.1.6     bit64_4.0.5       devtools_2.4.3   
+ [5] httr_1.4.2        rprojroot_2.0.3   tools_4.1.3       backports_1.4.1  
+ [9] bslib_0.3.1       utf8_1.2.2        R6_2.5.1          DBI_1.1.2        
+[13] colorspace_2.0-3  withr_2.5.0       tidyselect_1.1.2  prettyunits_1.1.1
+[17] processx_3.5.3    bit_4.0.4         compiler_4.1.3    git2r_0.30.1     
+[21] cli_3.3.0         rvest_1.0.2       xml2_1.3.3        desc_1.4.1       
+[25] labeling_0.4.2    sass_0.4.1        scales_1.2.0      hexbin_1.28.2    
+[29] DEoptimR_1.0-11   robustbase_0.95-0 callr_3.7.0       digest_0.6.29    
+[33] rmarkdown_2.13    pkgconfig_2.0.3   htmltools_0.5.2   scico_1.3.0      
+[37] sessioninfo_1.2.2 bigleaf_0.8.1     highr_0.9         dbplyr_2.1.1     
+[41] fastmap_1.1.0     rlang_1.0.3       readxl_1.4.0      rstudioapi_0.13  
+[45] farver_2.1.0      jquerylib_0.1.4   generics_0.1.2    jsonlite_1.8.0   
+[49] vroom_1.5.7       magrittr_2.0.3    Rcpp_1.0.8.3      munsell_0.5.0    
+[53] fansi_1.0.3       lifecycle_1.0.1   stringi_1.7.6     whisker_0.4      
+[57] yaml_2.3.5        brio_1.1.3        pkgbuild_1.3.1    grid_4.1.3       
+[61] parallel_4.1.3    promises_1.2.0.1  crayon_1.5.1      lattice_0.20-45  
+[65] haven_2.4.3       hms_1.1.1         knitr_1.38        ps_1.6.0         
+[69] pillar_1.7.0      pkgload_1.2.4     reprex_2.0.1      glue_1.6.2       
+[73] evaluate_0.15     getPass_0.2-2     REddyProc_1.3.2   remotes_2.4.2    
+[77] modelr_0.1.8      solartime_0.0.2   vctrs_0.4.1       tzdb_0.3.0       
+[81] httpuv_1.6.5      testthat_3.1.4    cellranger_1.1.0  gtable_0.3.0     
+[85] assertthat_0.2.1  cachem_1.0.6      broom_0.8.0       later_1.3.0      
+[89] memoise_2.0.1     ellipsis_0.3.2    here_1.0.1       </code></pre>
 </div>
 </div>
 
