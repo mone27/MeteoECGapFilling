@@ -379,7 +379,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-30
+<strong>Last updated:</strong> 2022-07-01
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -470,16 +470,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree5e32a3260e190a9793b3f305ef924abf23d60784targetblank5e32a32a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/5e32a3260e190a9793b3f305ef924abf23d60784" target="_blank">5e32a32</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree7104894f279599094dc48b80eb03ba39f441eae1targetblank7104894a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/7104894f279599094dc48b80eb03ba39f441eae1" target="_blank">7104894</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree5e32a3260e190a9793b3f305ef924abf23d60784targetblank5e32a32a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree7104894f279599094dc48b80eb03ba39f441eae1targetblank7104894a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/5e32a3260e190a9793b3f305ef924abf23d60784" target="_blank">5e32a32</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/7104894f279599094dc48b80eb03ba39f441eae1" target="_blank">7104894</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -494,8 +494,7 @@ Untracked files:
     Untracked:  cache/
 
 Unstaged changes:
-    Modified:   analysis/ERA_gap_filling_quality.rmd
-    Modified:   analysis/fragments/variable_assess_ERA_gapfilling.rmd
+    Modified:   analysis/fragments/variable_assess_MDS_gapfilling.Rmd
     Deleted:    analysis/variable_distribution.rmd
 
 </code></pre>
@@ -535,6 +534,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/7104894f279599094dc48b80eb03ba39f441eae1/analysis/MDS_gap_filling_quality.rmd" target="_blank">7104894</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-01
+</td>
+<td>
+updates to MDS text
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mone27/MeteoECGapFilling/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/MDS_gap_filling_quality.html" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -893,7 +926,7 @@ Basic quality assement for Tair
 <tr class="even">
 <td>Precipitation</td>
 <td>OTT Pluvio2</td>
-<td>1mm</td>
+<td>0.1mm</td>
 <td><a href="https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/" class="uri">https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/</a></td>
 </tr>
 <tr class="odd">
@@ -916,26 +949,25 @@ Basic quality assement for Tair
 <p>To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and the Root Mean Square Error (RMSE) is computed.</p>
 <p>For each of the variable of interest:</p>
 <ul>
-<li>3000 gaps with a different length (from 1 hour to 60 days) and random location are generated</li>
+<li><strong>50</strong> gaps for each of 30 different lengths (ranging from 1 hour to 60 days) at random location are generated</li>
 <li>the gaps are filled using <code>REddyProc</code></li>
 <li>for the gap period RMSE is calculated</li>
+<li>for each gap length the RMSE and the standard deviation is calculated</li>
 </ul>
 <p>generate artificial gaps and then fill the data using REddyProc</p>
 <div id="tair" class="section level2">
 <h2>Tair</h2>
 <p>The mean RMSE for the temperature ranges between 2 and 5 °C. This can be considered an high, given that the instrument accuracy is 0.1 °C. Moreover, temperature is very important variable for the ecosystem, but also has good temporal autocorrelation which should simplify gap filling.</p>
+<p><u><a href="variable_exploration.html#Tair"><strong>Variable distribution and details 🔗</strong></a></u></p>
 <table>
-<caption>Tair</caption>
-<thead>
-<tr class="header">
-<th align="right">Average RMSE Mean</th>
-<th align="right">Average RMSE Sd</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">3.795852</td>
-<td align="right">1.478221</td>
+<td>Average RMSE Mean</td>
+<td>3.76 °C</td>
+</tr>
+<tr class="even">
+<td>Average RMSE Sd</td>
+<td>1.47 °C</td>
 </tr>
 </tbody>
 </table>
@@ -967,6 +999,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_rmse-1.png" target="_blank">4982a6e</a>
@@ -1023,6 +1066,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_dist_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/Tair_plot_dist_rmse-1.png" target="_blank">4982a6e</a>
 </td>
 <td>
@@ -1047,61 +1101,27 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/Tair_plot_scatter-1.png" alt="Tair Measured vs gap filled using density plots. All generated gaps are merged in one dataset" width="672" />
+<p class="caption">
+Tair Measured vs gap filled using density plots. All generated gaps are merged in one dataset
 </p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-12-1.png" target="_blank">4982a6e</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 </div>
 <div id="sw_in" class="section level2">
 <h2>SW_IN</h2>
 <p>The incoming shortwave radiation average RMSE is 100 W m-2 This is roughly 10 times the instrument sensitivity. Incoming shortwave behaviour should also be relatively easy to predict.</p>
 <p>This should be checked how it varies across the year, the SW_IN values can be quite different between winter and summer</p>
+<p><u><a href="variable_exploration.html#SW_IN"><strong>Variable distribution and details 🔗</strong></a></u></p>
 <table>
-<caption>SW_IN</caption>
-<thead>
-<tr class="header">
-<th align="right">Average RMSE Mean</th>
-<th align="right">Average RMSE Sd</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">94.3394</td>
-<td align="right">54.59292</td>
+<td>Average RMSE Mean</td>
+<td>94.14 W m-2</td>
+</tr>
+<tr class="even">
+<td>Average RMSE Sd</td>
+<td>53.85 W m-2</td>
 </tr>
 </tbody>
 </table>
@@ -1133,6 +1153,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_rmse-1.png" target="_blank">4982a6e</a>
@@ -1189,6 +1220,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_dist_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/SW_IN_plot_dist_rmse-1.png" target="_blank">4982a6e</a>
 </td>
 <td>
@@ -1213,106 +1255,48 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
-Past versions of unnamed-chunk-14-1.png
-</button>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/SW_IN_plot_scatter-1.png" alt="SW_IN Measured vs gap filled using density plots. All generated gaps are merged in one dataset" width="672" />
+<p class="caption">
+SW_IN Measured vs gap filled using density plots. All generated gaps are merged in one dataset
 </p>
-<div id="fig-unnamed-chunk-14-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">4982a6e</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">3790a33</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">af4f8db</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/2ca7842a901dbc9313f1acbca75f590966e3322a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-14-1.png" target="_blank">2ca7842</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 </div>
 <div id="vpd" class="section level2">
 <h2>VPD</h2>
-<p>The Vapour Pressure Deficit is calculated as the difference from the saturation vapour pressure (<code>e_s</code>) and the actual vapour pressure(<code>e_a</code>). So we are using the formula to estimate the accuracy of the instruments relative to the <code>VPD</code></p>
+<p>The instrument accuracy is relative humidity, while the variable of interest is the Vapour Pressure Deficit (VPD) The VPD is calculated as the difference from the saturation vapour pressure (<code>e_s</code>) and the actual vapour pressure(<code>e_a</code>). So to estimate the accuracy of the VPD measurements we are calculating for each observation the accuracy connected of VPD by transforming the RH measurement. Then the VPD accuracy is averaged over So we are using the formula to estimate the accuracy of the instruments relative to the <code>VPD</code></p>
+<pre class="r"><code>get_es &lt;-  function(ta)  6.1078 * exp((17.08085 * ta) / (234.175 + ta))
+rh2ea &lt;- function(rh, e_s) rh/100 * e_s
+get_vpd &lt;- function(e_s, e_a) e_s - e_a
+
+rh_acc &lt;- .8
+
+vpd_acc &lt;- hai %&gt;%
+    mutate(e_s = get_es(Tair),
+           e_a_acc = rh2ea(rh_acc, e_s), # .8 is the accuracy of the instrument
+           vpd_acc = get_vpd(e_s, e_a_acc)
+    )
+
+vpd_acc_mean &lt;- mean(vpd_acc$vpd_acc) %&gt;%  round(2)</code></pre>
 <table>
-<thead>
-<tr class="header">
-<th align="right">vpd_acc</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">12.33</td>
+<td>VPD Accuracy</td>
+<td>12.33 hPa</td>
 </tr>
 </tbody>
 </table>
-<p>This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfying.</p>
+<p>The average RMSE seems it has a good value, but this is a likely inaccurate due to the high frequency of 0 in the observations</p>
+<p><u><a href="variable_exploration.html#VPD"><strong>Variable distribution and details 🔗</strong></a></u></p>
 <table>
-<caption>VPD</caption>
-<thead>
-<tr class="header">
-<th align="right">Average RMSE Mean</th>
-<th align="right">Average RMSE Sd</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">2.514731</td>
-<td align="right">1.931052</td>
+<td>Average RMSE Mean</td>
+<td>2.5 hPa</td>
+</tr>
+<tr class="even">
+<td>Average RMSE Sd</td>
+<td>1.88 hPa</td>
 </tr>
 </tbody>
 </table>
@@ -1344,6 +1328,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_rmse-1.png" target="_blank">4982a6e</a>
@@ -1400,6 +1395,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_dist_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/VPD_plot_dist_rmse-1.png" target="_blank">4982a6e</a>
 </td>
 <td>
@@ -1424,65 +1430,11 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
-Past versions of unnamed-chunk-16-1.png
-</button>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/VPD_plot_scatter-1.png" alt="VPD Measured vs gap filled using density plots. All generated gaps are merged in one dataset" width="672" />
+<p class="caption">
+VPD Measured vs gap filled using density plots. All generated gaps are merged in one dataset
 </p>
-<div id="fig-unnamed-chunk-16-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/3790a33c467b6f05d201c12b895e54b91945d79a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-16-1.png" target="_blank">3790a33</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-16-1.png" target="_blank">af4f8db</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/2ca7842a901dbc9313f1acbca75f590966e3322a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-16-1.png" target="_blank">2ca7842</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 </div>
 <div id="p" class="section level2">
@@ -1490,18 +1442,16 @@ Simone Massaro
 <p>The Precipitation is a hard variable to gap fill, because is erratic and has a limited connection with the other variables.</p>
 <p>The precipitation has a high number of 0 this likely is the reason for the good RMSE.</p>
 <p>Comparing sums over a period of time may be a better way to assess precipitations than the point-wise RMSE</p>
+<p><u><a href="variable_exploration.html#P"><strong>Variable distribution and details 🔗</strong></a></u></p>
 <table>
-<caption>P</caption>
-<thead>
-<tr class="header">
-<th align="right">Average RMSE Mean</th>
-<th align="right">Average RMSE Sd</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.188019</td>
-<td align="right">0.1790839</td>
+<td>Average RMSE Mean</td>
+<td>0.19 mm</td>
+</tr>
+<tr class="even">
+<td>Average RMSE Sd</td>
+<td>0.17 mm</td>
 </tr>
 </tbody>
 </table>
@@ -1533,6 +1483,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/P_plot_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/P_plot_rmse-1.png" target="_blank">4982a6e</a>
@@ -1589,6 +1550,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/P_plot_dist_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/P_plot_dist_rmse-1.png" target="_blank">4982a6e</a>
 </td>
 <td>
@@ -1613,71 +1585,26 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
-Past versions of unnamed-chunk-18-1.png
-</button>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/P_plot_scatter-1.png" alt="P Measured vs gap filled using density plots. All generated gaps are merged in one dataset" width="672" />
+<p class="caption">
+P Measured vs gap filled using density plots. All generated gaps are merged in one dataset
 </p>
-<div id="fig-unnamed-chunk-18-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/af4f8dba88b6b6012847b8a8af415659e07fdb7a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-18-1.png" target="_blank">af4f8db</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/2ca7842a901dbc9313f1acbca75f590966e3322a/docs/figure/MDS_gap_filling_quality.rmd/unnamed-chunk-18-1.png" target="_blank">2ca7842</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-06-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 </div>
 <div id="pa" class="section level2">
 <h2>PA</h2>
 <p>The mean RMSE for the Air Pressure ranges between 0.5 and 1 hPa, which is roughly 3 times the instrument accuracy.</p>
+<p><u><a href="variable_exploration.html#PA"><strong>Variable distribution and details 🔗</strong></a></u></p>
 <table>
-<caption>PA</caption>
-<thead>
-<tr class="header">
-<th align="right">Average RMSE Mean</th>
-<th align="right">Average RMSE Sd</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.7279928</td>
-<td align="right">0.3695505</td>
+<td>Average RMSE Mean</td>
+<td>0.73 hPa</td>
+</tr>
+<tr class="even">
+<td>Average RMSE Sd</td>
+<td>0.37 hPa</td>
 </tr>
 </tbody>
 </table>
@@ -1709,6 +1636,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_rmse-1.png" target="_blank">4982a6e</a>
@@ -1765,6 +1703,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/505f2c592678fd716e9f6d6bbbea23f1a50d685a/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_dist_rmse-1.png" target="_blank">505f2c5</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/mone27/MeteoECGapFilling/blob/4982a6e52252870455dcfc9854cf59e2ac6bfb04/docs/figure/MDS_gap_filling_quality.rmd/PA_plot_dist_rmse-1.png" target="_blank">4982a6e</a>
 </td>
 <td>
@@ -1789,7 +1738,17 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/MDS_gap_filling_quality.rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="figure" style="text-align: center">
+<img src="figure/MDS_gap_filling_quality.rmd/PA_plot_scatter-1.png" alt="PA Measured vs gap filled using density plots. All generated gaps are merged in one dataset" width="672" />
+<p class="caption">
+PA Measured vs gap filled using density plots. All generated gaps are merged in one dataset
+</p>
+</div>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>The exploratory analysis on the performance of the MDS algorithm for gap filling shows that it is often limited.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1829,20 +1788,19 @@ loaded via a namespace (and not attached):
 [17] git2r_0.30.1      cli_3.3.0         rvest_1.0.2       xml2_1.3.3       
 [21] labeling_0.4.2    sass_0.4.1        scales_1.2.0      hexbin_1.28.2    
 [25] callr_3.7.0       digest_0.6.29     rmarkdown_2.13    pkgconfig_2.0.3  
-[29] htmltools_0.5.2   parallelly_1.31.0 dbplyr_2.1.1      fastmap_1.1.0    
-[33] highr_0.9         rlang_1.0.3       readxl_1.4.0      rstudioapi_0.13  
-[37] jquerylib_0.1.4   generics_0.1.2    farver_2.1.0      jsonlite_1.8.0   
-[41] vroom_1.5.7       magrittr_2.0.3    Rcpp_1.0.8.3      munsell_0.5.0    
-[45] fansi_1.0.3       lifecycle_1.0.1   stringi_1.7.6     whisker_0.4      
-[49] yaml_2.3.5        grid_4.1.3        parallel_4.1.3    listenv_0.8.0    
-[53] promises_1.2.0.1  crayon_1.5.1      lattice_0.20-45   haven_2.4.3      
-[57] hms_1.1.1         knitr_1.38        ps_1.6.0          pillar_1.7.0     
-[61] codetools_0.2-18  reprex_2.0.1      glue_1.6.2        evaluate_0.15    
-[65] getPass_0.2-2     modelr_0.1.8      vctrs_0.4.1       tzdb_0.3.0       
-[69] httpuv_1.6.5      cellranger_1.1.0  gtable_0.3.0      assertthat_0.2.1 
-[73] broom_0.8.0       later_1.3.0       viridisLite_0.4.0 globals_0.14.0   
+[29] htmltools_0.5.2   scico_1.3.0       parallelly_1.31.0 dbplyr_2.1.1     
+[33] fastmap_1.1.0     highr_0.9         rlang_1.0.3       readxl_1.4.0     
+[37] rstudioapi_0.13   jquerylib_0.1.4   generics_0.1.2    farver_2.1.0     
+[41] jsonlite_1.8.0    vroom_1.5.7       magrittr_2.0.3    Rcpp_1.0.8.3     
+[45] munsell_0.5.0     fansi_1.0.3       lifecycle_1.0.1   stringi_1.7.6    
+[49] whisker_0.4       yaml_2.3.5        grid_4.1.3        parallel_4.1.3   
+[53] listenv_0.8.0     promises_1.2.0.1  crayon_1.5.1      lattice_0.20-45  
+[57] haven_2.4.3       hms_1.1.1         knitr_1.38        ps_1.6.0         
+[61] pillar_1.7.0      codetools_0.2-18  reprex_2.0.1      glue_1.6.2       
+[65] evaluate_0.15     getPass_0.2-2     modelr_0.1.8      vctrs_0.4.1      
+[69] tzdb_0.3.0        httpuv_1.6.5      cellranger_1.1.0  gtable_0.3.0     
+[73] assertthat_0.2.1  broom_0.8.0       later_1.3.0       globals_0.14.0   
 [77] ellipsis_0.3.2    here_1.0.1       </code></pre>
-</div>
 </div>
 </div>
 

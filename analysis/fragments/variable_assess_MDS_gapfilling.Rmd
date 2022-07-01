@@ -31,13 +31,15 @@ suppressWarnings({
 }, file = "{{var}}_stat")
 ```
 
-```{r}
-tibble(
-    "Average RMSE Mean" = mean({{var}}_rmse_stat$mean),
-    "Average RMSE Sd" = mean({{var}}_rmse_stat$sd)
-) %>%
-    knitr::kable(caption="{{var}}")
-```
+[[**Variable distribution and details 🔗**](variable_exploration.html#{{var}})]{.underline}
+
+|                   |                                                        |
+|-------------------|--------------------------------------------------------|
+| Average RMSE Mean | `r mean({{var}}_rmse_stat$mean) %>% round(2)` {{unit}} |
+| Average RMSE Sd   | `r mean({{var}}_rmse_stat$sd) %>% round(2)` {{unit}}   |
+
+
+
 
 ```{r, {{var}}_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
 {{var}}_rmse_stat %>%
@@ -56,11 +58,11 @@ tibble(
         facet_wrap(~gap_length) +
         labs(x = "RMSE [{{unit}}]", title = "{{var}}")
 ```
-```{r}
+```{r, {{var}}_plot_scatter, fig.cap="{{var}} Measured vs gap filled using density plots. All generated gaps are merged in one dataset"}
 {{var}}_filled %>%
     bind_rows() %>%
     ggplot(aes_string(x = "{{var}}", y = "{{var}}_f")) +
-    geom_hex(bins = 50) +
+    geom_hex(bins = 30) +
     labs(x = "Measured {{var}} [{{unit}}]", y = "Gap Filled {{var}} [{{unit}}]") +
-    scale_fill_viridis_c()
+    scico::scale_fill_scico(palette = "vik")
 ```
