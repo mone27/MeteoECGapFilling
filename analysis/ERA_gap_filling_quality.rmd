@@ -3,29 +3,20 @@ title: "ERA 5 Gap Filling quality Assessment"
 output: html_notebook
 ---
 
-```{r}
+```{r, include = F}
 library(tidyverse)
 theme_set(theme_bw())
 library(Metrics)
 library(lubridate)
 library(xfun)
-# parallel execution
-library(furrr)
-n_workers <- 11
-plan(multisession, workers = n_workers)
-
-# number repetition for each gap
-n_rep <-  10
-
-#load_all() doesn't works with futures, so loading only code in R dir
-list.files(here::here("R"), full.names = TRUE) %>%
-  walk(source)
+devtools::load_all()
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r}
 meteo_vars <-
   list(
-    "TA" = "TA_F",
+    "Tair" = "TA_F",
     "SW_IN" = "SW_IN_F",
     "LW_IN" = "LW_IN_F" ,
     "VPD" = "VPD_F",
@@ -38,70 +29,81 @@ meteo_vars_eta <- names(meteo_vars) %>%
 
 hai_era_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_ERAI_HH_1989-2014_1-4.csv")
 hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
-site <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99")) %>%
+site_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+
+# Remove gap filled measurements
+site_obs <- site_raw %>%
+        filter((if_all(as.character(meteo_vars), \(x) {
+          name <- cur_column()
+          cur_data()[str_glue("{name}_QC")] == 0
+        }))) %>%
         select(TIMESTAMP_END, !!!meteo_vars)
 
 site_era <- read_csv(hai_era_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99")) %>%
+        rename(Tair_ERA = TA_ERA) %>%
         select(TIMESTAMP_END, !!!meteo_vars_eta)
 
-site <- site %>%
+site <- site_obs %>%
         left_join(site_era, by = "TIMESTAMP_END")
 ```
+
 ```{r}
 # calculate RMSE for each variable
 walk(seq_along(meteo_vars), function(i){
-  var_name <- names(meteo_vars)[[i]]
-  var_name_eta <- paste0(var_name, "_ERA")
+  var_name <- sym(names(meteo_vars)[[i]])
+  var_name_era <- sym(paste0(var_name, "_ERA"))
   site <<- site %>%
-          mutate("{var_name}_rmse" := rmse(!!sym(var_name), !!sym(var_name_eta)))
+          mutate(
+                  "{var_name}_err" := !!var_name - !!var_name_era
+          )
 })
+
+# more tidyversy version, but a bit slower
+# site %>%
+#   mutate(across(
+#     names(meteo_vars),
+#     \(x) {
+#       var_name <- cur_column()
+#       x - cur_data()[paste0(var_name, "_ERA")]
+#     },
+#     .names = "{.col}_err"
+#   ))
+
+site_stat <- site %>%
+        summarize(
+          across(ends_with("err"),
+              list( rmse = ~sqrt(mean(.x ^ 2)))
+        ))
 ```
 
+## Tair
 
-## TA
-```{r}
-site %>%
-    ggplot(aes(TA)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE TA [°C]")
+```{r, results = 'asis', message = FALSE, echo=FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "Tair", unit="°C")
 ```
 
 ## SW_IN
-```{r}
-site %>%
-    ggplot(aes(SW_IN)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE SW_IN [W m-2]")
-```
 
-## LW_IN
-```{r}
-site %>%
-    ggplot(aes(LW_IN)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE LW_IN [W m-2]")
+```{r, results = 'asis', echo = FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
-
 ## VPD
-```{r}
-site %>%
-    ggplot(aes(VPD)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE VPD [hPa]")
+
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "VPD", unit="hPa")
 ```
 
 ## P
-```{r}
-site %>%
-    ggplot(aes(P)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE P [mm]")
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "P", unit="mm")
 ```
 
+
 ## PA
-```{r}
-site %>%
-    ggplot(aes(PA)) +
-    geom_histogram(aes(y=..density..), bins = 30, colour = "white") +
-    labs(x = "RMSE PA [hPa]")
+
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "PA", unit="hPa")
 ```
