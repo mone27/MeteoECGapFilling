@@ -14,7 +14,7 @@ n_workers <- 11
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  100
+n_rep <-  50
 
 #load_all() doesn't works with futures, so loading only code in R dir
 list.files(here::here("R"), full.names = TRUE) %>%
@@ -58,7 +58,7 @@ The list of instruments available at Hainich is available at [https://data.icos-
 | Temperature         | Vaisala HMP35   | 0.1 °C   | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
 | Humidity            | Vaisala HMP35   | 0.8% RH  | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
 | Pressure            | Vaisala PTB101B | 0.3 hPa  | https://www.vaisala.com/sites/default/files/documents/PTB110-Datasheet-B210681EN.pdf       |
-| Precipitation       | OTT Pluvio2     | 1mm      | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
+| Precipitation       | OTT Pluvio2     | 0.1mm    | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
 | Shortwave radiation | DeltaT SPN1     | 10 Wm-2  | https://delta-t.co.uk/wp-content/uploads/2016/10/SPN1-Technical-Fact-Sheet-v1.2_d_web.pdf  |
 
 
@@ -108,9 +108,10 @@ To have a simple test of the accuracy of the gap filling algorith artificial gap
 
 For each of the variable of interest:
 
- - `r n_rep * 30` gaps with a different length (from 1 hour to 60 days) and random location are generated
+ - **`r n_rep`** gaps for each of 30 different lengths (ranging from 1 hour to 60 days) at random location are generated
  - the gaps are filled using `REddyProc`
  - for the gap period RMSE is calculated
+ - for each gap length the RMSE and the standard deviation is calculated
 
 generate artificial gaps and then fill the data using REddyProc
 
@@ -122,7 +123,7 @@ Moreover, temperature is very important variable for the ecosystem, but also has
 
 
 ```{r, results = 'asis', message = FALSE, echo=FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "Tair", unit="°C")
+knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "Tair", unit="°C")
 ```
 
 ## SW_IN
@@ -134,33 +135,49 @@ Incoming shortwave behaviour should also be relatively easy to predict.
 This should be checked how it varies across the year, the SW_IN values can be quite different between winter and summer
 
 ```{r, results = 'asis', echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "SW_IN", unit="W m-2")
+knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "SW_IN", unit="W m-2")
 ```
 ## VPD
 
-The Vapour Pressure Deficit is calculated as the difference from the saturation vapour pressure (`e_s`) and the actual vapour pressure(`e_a`).
+The instrument accuracy is relative humidity, while the variable of interest is the Vapour Pressure Deficit (VPD)
+The VPD is calculated as the difference from the saturation vapour pressure (`e_s`) and the actual vapour pressure(`e_a`).
+So to estimate the accuracy of the VPD measurements we are calculating for each observation the accuracy connected of VPD by transforming the RH measurement. Then the VPD accuracy is averaged over
 So we are using the formula to estimate the accuracy of the instruments relative to the `VPD`
 
-```{r}
+```{r, echo = T}
 get_es <-  function(ta)  6.1078 * exp((17.08085 * ta) / (234.175 + ta))
 rh2ea <- function(rh, e_s) rh/100 * e_s
 get_vpd <- function(e_s, e_a) e_s - e_a
 
 rh_acc <- .8
 
-hai %>%
+vpd_acc <- hai %>%
     mutate(e_s = get_es(Tair),
            e_a_acc = rh2ea(rh_acc, e_s), # .8 is the accuracy of the instrument
            vpd_acc = get_vpd(e_s, e_a_acc)
-    ) %>%
-summarize(vpd_acc = mean(vpd_acc) %>%  round(2)) %>%
-knitr::kable()
+    )
+
+vpd_acc_mean <- mean(vpd_acc$vpd_acc) %>%  round(2)
 ```
 
-This calculation should be probably made is a more accurate way (likely take the mean of everything is not a great idea), but seems the gap filling performance is satisfying.
+|              |                      |
+|--------------|----------------------|
+| VPD Accuracy | `r vpd_acc_mean` hPa |
+
+
+```{r, include = F, eval = F}
+# For reference the distribution of the vpd accuracy
+vpd_acc %>%
+    ggplot() +
+    geom_histogram(aes(vpd_acc), color = "white") +
+    geom_vline(aes(xintercept = vpd_acc_mean, colour= "mean"))
+```
+
+
+The average RMSE seems it has a good value, but this is a likely inaccurate due to the high frequency of 0 in the observations
 
 ```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "VPD", unit="hPa")
+knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "VPD", unit="hPa")
 ```
 
 ## P
@@ -172,7 +189,7 @@ The precipitation has a high number of 0 this likely is the reason for the good 
 Comparing sums over a period of time may be a better way to assess precipitations than the point-wise RMSE
 
 ```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", unit="mm")
+knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "P", unit="mm")
 ```
 
 
@@ -181,7 +198,10 @@ knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "P", un
 The mean RMSE for the Air Pressure ranges between 0.5 and 1 hPa, which is roughly 3 times the instrument accuracy.
 
 ```{r, results = 'asis',  echo = FALSE}
-knit_template("analysis/fragments/variable_assess_gapfilling.rmd", var = "PA", unit="hPa")
+knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "PA", unit="hPa")
 ```
 
+# Conclusion
+
+The exploratory analysis on the performance of the MDS algorithm for gap filling shows that it is often limited.
 
