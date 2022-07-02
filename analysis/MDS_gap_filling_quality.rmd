@@ -14,7 +14,7 @@ n_workers <- 11
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  50
+n_rep <-  2
 
 #load_all() doesn't works with futures, so loading only code in R dir
 list.files(here::here("R"), full.names = TRUE) %>%
@@ -126,6 +126,119 @@ Moreover, temperature is very important variable for the ecosystem, but also has
 knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "Tair", unit="°C")
 ```
 
+```{r, Tair_calc, message = FALSE}
+
+# go up to 60 days which is the maximium gap is going to be filled
+# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+gaps_lengths <-  seq_log(1.1, 24 * 2 * 30 * 2 , offset = 15, length.out = 30) %>%
+        rep(n_rep) %>%
+        as.integer()
+
+Tair_filled <-
+  gaps_lengths %>%
+    split_vector(n_workers) %>%
+    future_map(~gap_fill_random_gap_EProc_vec(site_data, "Tair", .x), .options = furrr_options(seed = TRUE)) %>%
+    bind_rows() %>%
+    mutate(
+      rmse = map_dbl(data, ~gap_rmse(.x, "Tair"))
+    )
+
+Tair_rmse_stat <- cache_rds({
+    Tair_filled %>%
+      group_by(gap_length) %>%
+      summarise(mean = mean(rmse), sd = sd(rmse)) %>%
+        mutate(error_high = mean + sd, error_low = mean - sd)
+}, file = "Tair_stat")
+```
+
+```{r}
+Tair_rmse <- Tair_filled %>%
+    mutate(
+      rmse = map_dbl(data, ~gap_rmse(.x, "Tair"))
+    ) %>%
+    select(-data)
+```
+
+```{r}
+Tair_filled <- gap_fill_random_gap_EProc_vec(site_data, "Tair", gaps_lengths)
+```
+
+
+[[**Variable distribution and details 🔗**](variable_exploration.html#Tair)]{.underline}
+
+|                   |                                                        |
+|-------------------|--------------------------------------------------------|
+| Average RMSE Mean | `r mean(Tair_rmse_stat$mean) %>% round(2)` {{unit}} |
+| Average RMSE Sd   | `r mean(Tair_rmse_stat$sd) %>% round(2)` {{unit}}   |
+
+
+
+
+```{r, Tair_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
+Tair_rmse_stat %>%
+  mutate(gap_length = gap_length / 2) %>%
+  ggplot(aes(gap_length)) +
+  geom_ribbon(aes(ymin = error_low, ymax = error_high), alpha = .5) +
+  geom_line(aes(y=mean)) +
+  labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]", title = "Tair")
+```
+```{r, Tair_plot_scatter, fig.cap="Tair Measured vs gap filled using density plots. All generated gaps are merged in one dataset"}
+Tair_filled %>%
+    unnest(data) %>%
+    ggplot(aes_string(x = "Tair", y = "Tair_f")) +
+    geom_hex(bins = 30) +
+    labs(x = "Measured Tair [{{unit}}]", y = "Gap Filled Tair [{{unit}}]") +
+    scico::scale_fill_scico(palette = "vik")
+```
+```{r}
+# get 4 gap lengths from the gap (escluding the last one)
+gap_sample_idx <- seq(from = 2, to = length(unique(gaps_lengths)), length.out = 5) %>% as.integer()
+gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
+```
+```{r, Tair_plot_dist_rmse, fig.cap = "Distrubution of RMSE for a sample of gap lengths (in hours)"}
+Tair_rmse %>%
+    filter(gap_length %in% gap_sample) %>% # select as sample 4 different gaps
+    mutate(gap_length = pretty_gap_len(gap_length)) %>% # convert to hours from half hours
+    ggplot(aes(rmse)) +
+        geom_histogram(aes(y = ..density..), bins=12, colour = "white") +
+        facet_wrap(~gap_length) +
+        labs(x = "RMSE [{{unit}}]", title = "Tair")
+```
+
+```{r}
+Tair_filled %>%
+    filter(gap_length %in% gap_sample) %>%
+    group_by(gap_length) %>%
+    slice_sample(n = 1) %>% # 1 sample for each of the sample gap lengths
+    mutate(data = list(to_fixed_gap_length(data[[1]], site_data, len = 5*24*2))) %>%  # make all gaps same length, by either removing observations or adding them (from the original data)
+    unnest(data) %>%
+    mutate(gap_length = pretty_gap_len(gap_length) %>% fct_inorder()) %>%
+    ggplot(aes(TIMESTAMP_END)) +
+    geom_line(aes(y = Tair, colour = "measured")) +
+    geom_line(aes(y = Tair_f, colour = "filled"), na.rm = TRUE) +
+    geom_point(aes(y = Tair_f, colour = "filled"), na.rm = TRUE) +
+    facet_wrap(~gap_length, scales = "free_x") +
+    labs(colour = "Type", y = "Tair {{unit}}") +
+    scale_colour_manual(values = ggthemes::colorblind_pal()(2)[c(2,1)])
+```
+
+```{r}
+
+```
+
+
+```{r}
+test_gap <- sample(Tair_filled, 1)[[1]]
+```
+```{r}
+time_around_gap(test_gap)
+```
+```{r}
+test_gap2 <- sample(Tair_filled, 1)[[1]]
+```
+```{r}
+(time_around_gap(test_gap2))
+```
 ## SW_IN
 
 The incoming shortwave radiation average RMSE is 100 W m-2
