@@ -87,6 +87,7 @@ knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "Ta
 ```{r, results = 'asis', echo = FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
+
 ## VPD
 
 
