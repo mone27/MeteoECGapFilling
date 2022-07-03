@@ -83,7 +83,7 @@ set.seed(103) # ensure always the same sample is taken
     labs(colour = "Type", y = "{{var}} [{{unit}}]") +
     scale_colour_manual(values = ggthemes::colorblind_pal()(2)[c(2,1)]) +
     theme(legend.position = "bottom") +
-    facet_wrap( ~gap_length, scales = "free_x")
+    facet_wrap( ~gap_length, scales = "free")
 ```
 ```{r, {{var}}_plot_dist_rmse, fig.cap = "Distrubution of RMSE for a sample of gap lengths (in hours)"}
 {{var}}_filled %>%
