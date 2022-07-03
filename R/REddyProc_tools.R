@@ -8,21 +8,6 @@ fill_gaps_EProc <- function(data, var){
   EProc$sExportResults()
 }
 
-random_gap <- function(gap_length, total_length) {
-  # constructing an array to indetify gaps
-  # it should be always false (no gap) except for a continous section of lenght `gap_length`
-  if(gap_length >= total_length){
-    return(rep(1, total_length))
-  }
-  gap_length <- ifelse(gap_length > total_length, total_length, gap_length)
-  gap_start <- sample.int(total_length - gap_length, 1) # gap cannot start too close to the end
-  c(
-          rep(0, gap_start),
-          rep(1, gap_length),
-          rep(0, total_length - (gap_length + gap_start))
-  )
-}
-
 #' Creates a random gap of given length and fill it
 gap_fill_random_gap_EProc <- function(data, var, gap_length) {
   data_gap <- data %>%
@@ -30,21 +15,25 @@ gap_fill_random_gap_EProc <- function(data, var, gap_length) {
   filled <- data_gap %>%
     fill_gaps_EProc(var)
 
-  bind_cols(data_gap, filled) %>%
-    filter(gap !=0 ) %>%  # the interesting part is only where there is the gap
-    mutate(gap_length = gap_length)
+  data_filled <- bind_cols(data_gap, filled) %>%
+    filter(gap !=0 ) # the interesting part is only where there is the gap
+
+  tibble(gap_length = gap_length, data = list(data_filled))
 }
 
 #' Vectorized version of gap legths
 gap_fill_random_gap_EProc_vec <- function(data, var, gap_lengths){
-  map(gap_lengths, ~gap_fill_random_gap_EProc(data, var, .x))
+  map_dfr(gap_lengths, ~gap_fill_random_gap_EProc(data, var, .x))
 }
 
 #' calculate RMSE or gap filled data
 #' @param data
 #' @param var variable to gap fill
-#' @param gap_length the lenght of the gap
 gap_rmse <- function(data, var){
-  data %>%
-    summarize(gap_length = gap_length, rmse = rmse(!!sym(var), !!sym(str_glue("{var}_f"))))
+  rmse(pull(data, !!sym(var)), pull(data, !!sym(str_glue("{var}_f"))))
+}
+
+pretty_gap_len <- function(gap_length){
+  str_glue("{prettyunits::pretty_dt(as.difftime(gap_length * 30, units=\"mins\"))} ({gap_length} obs.)")
+
 }
