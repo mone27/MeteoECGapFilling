@@ -8,8 +8,19 @@ editor_options:
   chunk_output_type: console
 ---
 
-Notebooks:
+This website contains the analysis of the quality of the current methods to gap fill meteorological data in the Eddy Covariance community.
 
-- [MDS Gap filling quality](MDS_gap_filling_quality.html)
-- [ERA Gap filling quality](ERA_gap_filling_quality.html)
-- [variable exploration](variable_exploration.html)
+Main analysis:
+
+- [MDS Gap filling quality](MDS_gap_filling_quality.html) Gap filling using REddyProc
+- [ERA Gap filling quality](ERA_gap_filling_quality.html) Gap filling using ERA data
+
+Supporting analysis:
+
+- [variable exploration](variable_exploration.html)  Exploration of variable distributions
+
+Addition analysis:
+
+- [MDS Gap filling quality_Hyy](MDS_gap_filling_quality_Hyy.html)  Gap filling using data from Hytiälä, instead of Hainich
+- [MDS multiple_missing_gap_filling quality](MDS multiple_missing_gap_filling quality.html)
+
