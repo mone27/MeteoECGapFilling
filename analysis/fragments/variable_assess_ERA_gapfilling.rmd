@@ -12,11 +12,52 @@ site %>%
 ```
 ```{r, {{var}}_plot_scatter, fig.cap="{{var}} Measured vs ERA Downscaling using density plots."}
 site %>%
-    ggplot(aes_string(x = "{{var}}", y = "{{var}}_ERA")) +
+    ggplot(aes(x = {{var}}, y = {{var}}_ERA)) +
     geom_hex(bins = 30) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "darkgreen") +
     labs(x = "Measured {{var}} [{{unit}}]", y = "ERA Downscaling {{var}} [{{unit}}]") +
     scico::scale_fill_scico(palette = "vik")
 ```
+
+### Error for different values
+
+```{r fig.cap = "Distribution of errors for different values of measurements"}
+
+{{var}}_err <- site %>%
+    mutate(
+      {{var}}_err = {{var}} - {{var}}_ERA,
+      {{var}}_cut = cut({{var}}, 8)
+    )
+
+{{var}}_err_rmse <- {{var}}_err %>%
+  group_by({{var}}_cut) %>%
+  summarize(rmse = rmse({{var}}, {{var}}_ERA))
+
+{{var}}_err_stat <- {{var}}_err %>%
+  summarize(mean = mean({{var}}_err), sd = sd({{var}}_err), lower = mean - sd, upper = lower + sd, rmse = rmse({{var}}, {{var}}_ERA))
+
+{{var}}_err %>%
+    ggplot() +
+    geom_hline(aes(yintercept = mean), data = {{var}}_err_stat, linetype = "dashed") +
+    geom_hline(aes(yintercept = rmse, colour = "Overall rmse"), data = {{var}}_err_stat) +
+    geom_boxplot(aes(x = {{var}}_cut, y = {{var}}_err)) +
+    labs(x = "{{var}} [{{unit}}]", y = "Error gap filling {{var}} [{{unit}}]") +
+    theme(legend.position = "bottom")
+```
+
+### Distribution filled vs measurements
+
+```{r, {{var}}_plot_fill_dist, fig.cap="{{var}} distribution of measured and gap filled values."}
+site %>%
+    ggplot() +
+    geom_freqpoly(aes(x = {{var}}, colour = "Measured"), bins = 30) +
+    geom_freqpoly(aes(x = {{var}}_ERA, colour = "Filled"), bins = 30) +
+    labs(x = "{{var}} [{{unit}}]", colour = "Type") +
+    scale_colour_manual(values = ggthemes::colorblind_pal()(2)[c(2,1)]) +
+    theme(legend.position = "bottom")
+```
+
+
 
 ```{r}
 set.seed(103) # ensure always the same sample is taken

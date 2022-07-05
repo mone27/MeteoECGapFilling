@@ -1,30 +1,9 @@
 ```{r, {{var}}_calc, message = FALSE}
-# go up to 60 days which is the maximium gap is going to be filled
-# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
-gaps_lengths <- seq_log(1.1, 24 * 2 * 30 * 2, offset = 15, length.out = 30) %>%
-  rep(n_rep) %>%
-  as.integer()
-# get 4 gap lengths from the gap (escluding the last one)
-gap_sample_idx <- seq(from = 2, to = length(unique(gaps_lengths)), length.out = 5) %>% as.integer()
-gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
+{{var}}_filled <- cache_rds(
+    gap_fill_multiple_gaps_EProc(site_data, gaps_lengths, "{{var}}", n_workers),
+    file = "{{var}}_filled"
+)
 
-
-{{var}}_filled <-
-  suppressWarnings({
-    suppressMessages({
-      cache_rds({
-        
-        gaps_lengths %>%
-          split_vector(n_workers) %>%
-          future_map(~gap_fill_random_gap_EProc_vec(site_data, "{{var}}", .x), .options = furrr_options(seed = TRUE)) %>%
-          bind_rows() %>%
-          mutate(
-            rmse = map_dbl(data, ~gap_rmse(.x, "{{var}}"))
-          )
-        
-      }, file = "{{var}}_filled")
-    })
-  })
 
 
 {{var}}_rmse_stat <- cache_rds({
@@ -44,7 +23,7 @@ gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
 | Average RMSE Sd   | `r mean({{var}}_rmse_stat$sd) %>% round(2)` {{unit}}   |
 
 
-
+### Gap length and RMSE
 
 ```{r, {{var}}_plot_rmse, fig.cap = "Average RMSE for dfferent gap lentgth. Shaded area is mean +/- std. dev"}
 {{var}}_rmse_stat %>%
@@ -54,15 +33,22 @@ gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
   geom_line(aes(y=mean)) +
   labs(x = "Gap Lengths [hours]", y = "RMSE [{{unit}}]", title = "{{var}}")
 ```
+
+### Scatter plot measured vs filled
+
 ```{r, {{var}}_plot_scatter, fig.cap="{{var}} Measured vs gap filled using density plots. All generated gaps are merged in one dataset"}
 {{var}}_filled %>%
     unnest(data) %>%
     ggplot(aes_string(x = "{{var}}", y = "{{var}}_f")) +
     geom_hex(bins = 30) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "darkgreen") +
     labs(x = "Measured {{var}} [{{unit}}]", y = "Gap Filled {{var}} [{{unit}}]") +
     scico::scale_fill_scico(palette = "vik")
 ```
 
+
+
+### Timeseries comparison
 
 ```{r, {{var}}_plot_timeseries, fig.cap = "Comparison time series between measured and filled {{var}} for a sample 4 different gap lenths. Gaps longer than a 5 days have been cropped for plotting."}
 set.seed(103) # ensure always the same sample is taken
@@ -85,7 +71,65 @@ set.seed(103) # ensure always the same sample is taken
     theme(legend.position = "bottom") +
     facet_wrap( ~gap_length, scales = "free")
 ```
-```{r, {{var}}_plot_dist_rmse, fig.cap = "Distrubution of RMSE for a sample of gap lengths (in hours)"}
+
+
+### Error distribution for different values
+
+
+```{r}
+{{var}}_err <- {{var}}_filled %>%
+    unnest(data) %>%
+    mutate(
+      {{var}}_err = {{var}} - {{var}}_f,
+      {{var}}_cut = cut({{var}}, 8)
+    )
+
+{{var}}_err_rmse <- {{var}}_err %>%
+  group_by({{var}}_cut) %>%
+  summarize(rmse = rmse({{var}}, {{var}}_f))
+
+{{var}}_err_stat <- {{var}}_err %>%
+  summarize(mean = mean({{var}}_err), sd = sd({{var}}_err), lower = mean - sd, upper = lower + sd, rmse = rmse({{var}}, {{var}}_f))
+
+{{var}}_err %>%
+    ggplot() +
+    geom_hline(aes(yintercept = mean), data = {{var}}_err_stat, linetype = "dashed") +
+    geom_hline(aes(yintercept = rmse, colour = "Overall rmse"), data = {{var}}_err_stat) +
+    geom_boxplot(aes(x = {{var}}_cut, y = {{var}}_err)) +
+    labs(x = "{{var}} [{{unit}}]", y = "Error gap filling {{var}} [{{unit}}]") +
+    theme(legend.position = "bottom")
+```
+
+#### RMSE fo different values
+
+```{r, collapsible=TRUE}
+ggplot() +
+   geom_col(aes({{var}}_cut, rmse, group=1), {{var}}_err_rmse) +
+   geom_hline(aes(yintercept = rmse, colour = "Overall rmse"), data = {{var}}_err_stat) +
+    theme(legend.position = "bottom")
+```
+
+
+### Distribution filled vs measurements
+
+```{r, {{var}}_plot_fill_dist, fig.cap="{{var}} distribution of measured and gap filled values for different gap lengths."}
+{{var}}_filled %>%
+    filter(gap_length %in% gap_sample) %>%
+    unnest(data) %>% # This is the 3rd time I am unnesting this dataframe  ...
+    mutate(gap_length = pretty_gap_len(gap_length) %>% fct_inorder()) %>%
+    ggplot() +
+    geom_freqpoly(aes(x = {{var}}, colour = "Measured"), bins = 20) +
+    geom_freqpoly(aes(x = {{var}}_f, colour = "Filled"), bins = 20) +
+    labs(x = "{{var}} [{{unit}}]", colour = "Type") +
+    scale_colour_manual(values = ggthemes::colorblind_pal()(2)[c(2,1)]) +
+    theme(legend.position = "bottom") +
+    facet_wrap(~gap_length, scales = "free_y")
+```
+
+
+### Distribution RMSE
+
+```{r, {{var}}_plot_dist_rmse, fig.cap = "Distrubution of RMSE for a sample of gap lengths (in hours)", collapsible=TRUE}
 {{var}}_filled %>%
     filter(gap_length %in% gap_sample) %>% # select as sample 4 different gaps
     mutate(gap_length = pretty_gap_len(gap_length)) %>% # convert to hours from half hours

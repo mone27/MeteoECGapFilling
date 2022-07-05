@@ -44,3 +44,6 @@ to_fixed_gap_length <- function(gap, site_data, len = 7 * 24 * 12) {
       filter(selection == 1)
   }
 }
+
+
+
