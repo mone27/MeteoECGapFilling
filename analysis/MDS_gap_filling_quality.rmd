@@ -14,26 +14,18 @@ n_workers <- 11
 plan(multisession, workers = n_workers)
 
 # number repetition for each gap
-n_rep <-  60
+n_rep <-  30
 
 #load_all() doesn't works with futures, so loading only code in R dir
 list.files(here::here("R"), full.names = TRUE) %>%
   walk(source)
-```
+collapsible_hook() # register the collpasible hook
 
-```{r, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, cache.path = str_glue("cache/hai_{n_rep}/"))
 ```
 
-# Marginal Distribution Sampling (MDS)
+# Introduction
 
-Assess the quality of the gap filling using the default algorith from `REddyProc`, a standard implementations of meteo gap filling in the Eddy Covariance.
-
-The variables used for filling gaps are, that are used according to the REddyProc default:
-
-- Shortwave radiation incoming `SW_IN`
-- Air Temperature `Tair`
-- Vapour pressure deficit `VPD`
 
 ## Analysed variables
 
@@ -47,9 +39,66 @@ The variables that are gap filled are:
 - Precipitation
 
 
+## Marginal Distribution Sampling (MDS)
+
+Assess the quality of the gap filling using the default algorith from `REddyProc`, a standard implementations of meteo gap filling in the Eddy Covariance.
+
+The variables used for filling gaps are, that are used according to the REddyProc default:
+
+- Shortwave radiation incoming `SW_IN`
+- Air Temperature `Tair`
+- Vapour pressure deficit `VPD`
+
+The time window to look for data starts at 7 days and is increased until enough measurements are found
+
+In case the those 3 drivers variables are not available the gap filling procedure falls back to the `Mean Diurnal Course` (`MDC`) which uses the average at the same time of the day.
+There is again a window of increasing size starting from 7 days.
+
+
+
+## Gap generation
+
+To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and filled using `REddyProc`.
+
+For each of the variable of interest:
+
+ - **`r n_rep`** gaps for each of 30 different lengths (ranging from 1 hour to 60 days) at random location are generated (so `n_rep * 30` gaps in total)
+ - the gaps are filled using `REddyProc` default settings
+
+
+Note the gaps are created only for the variable of interest, not for the other variables (for gaps in multiple variables see [MDS_multiple_missing](MDS_multiple_missing_gap_filling_quality.html))
+
+## Metric
+
+The main metric is Root Mean Square Error (RMSE).
+
+ - for each the gap period RMSE is calculated
+ - for each gap length the average RMSE and the RMSE standard deviation is calculated
+
+The RMSE is plotted in relation to the gap lengths and their distribution
+
+Then the quality of the gap filling is performed visually using:
+
+- scatter plot between measured and filled values
+- distribution of measured vs filled values (for 4 sample gap lengths)
+- timeseries of measured vs filled (for 4 sample gap lengths)
+
+
+```{r}
+# go up to 60 days which is the maximium gap is going to be filled
+# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+gaps_lengths <- seq_log(1.1, 24 * 2 * 30 * 2, offset = 15, length.out = 30) %>%
+  rep(n_rep) %>%
+  as.integer()
+# get 4 gap lengths from the gap (escluding the last one)
+gap_sample_idx <- seq(from = 2, to = length(unique(gaps_lengths)), length.out = 5) %>% as.integer()
+gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
+```
 ## Instruments accuracy
 
 In order to estimate the quality of the gap filling the RMSE is compared with the instrument accuracy for the sensors.
+
+This is an ambitious goal, but gives the upper limit of the errors.
 
 The list of instruments available at Hainich is available at [https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H](https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H)
 
@@ -102,18 +151,7 @@ hai <- hai_raw %>%
 site_data <- hai
 ```
 
-# RMSE
-
-To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and the Root Mean Square Error (RMSE) is computed.
-
-For each of the variable of interest:
-
- - **`r n_rep`** gaps for each of 30 different lengths (ranging from 1 hour to 60 days) at random location are generated
- - the gaps are filled using `REddyProc`
- - for the gap period RMSE is calculated
- - for each gap length the RMSE and the standard deviation is calculated
-
-generate artificial gaps and then fill the data using REddyProc
+# Analysis
 
 ## Tair
 
@@ -125,6 +163,10 @@ Moreover, temperature is very important variable for the ecosystem, but also has
 ```{r, results = 'asis', message = FALSE, echo=FALSE}
 knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "Tair", unit="°C")
 ```
+
+
+
+
 
 ## SW_IN
 
@@ -209,7 +251,27 @@ The mean RMSE for the Air Pressure ranges between 0.5 and 1 hPa, which is roughl
 knit_template("analysis/fragments/variable_assess_MDS_gapfilling.Rmd", var = "PA", unit="hPa")
 ```
 
+
 # Conclusion
 
-The exploratory analysis on the performance of the MDS algorithm for gap filling shows that it is often limited.
+For basically all variables the RMSE increases with gap length and then stabilize on an average values.
+
+For some variables the RMSE is several times the instrument accuracy ( from ~40 times for temperature to ~3 times for air pressure) and for toehre variables like VPD or precipitation the average RMSE is not a good metric due to the high number of 0s in the measuremnts.
+
+The distributions of the gap filled measurements if usually good, for VPD and PA the occurence of the mean value is overestimated.
+
+
+In general the error of the gap filling methods is important and can have a significant impact on the quality of the research that uses this data.
+
+
+## Analysis notes
+
+- The procedure to generate gaps is relatively simple. Can consider to use something like [`mice::ampute`]( https://rianneschouten.github.io/mice_ampute/vignette/ampute.html). First example of this analysis available at: [MDS_multiple_missing](MDS_multiple_missing_gap_filling_quality.html)
+- This is the analysis only for one site, should include data from multiple site, possible to cover different ecosystems. Example here there is the analysis performed using data from [Hyytiälä (Finland)](MDS_gap_filling_quality_Hyy.html), and the results seems comparable.
+- The RMSE is a simple metric to assess the quality of the gap filling as it doesn't take into account the shape of imputed time series (for example see https://proceedings.neurips.cc/paper/2019/file/466accbac9a66b805ba50e42ad715740-Paper.pdf )
+
+Improvements:
+
+- neeed to handle variables where there a lot of 0 values (precipitation, VPD, SW_IN). Maybe make metrics without 0? or plot the error dsitribution or plot the relation between the measurement value and the error
+
 

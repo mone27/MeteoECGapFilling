@@ -76,7 +76,23 @@ site_stat <- site %>%
         ))
 ```
 
+# Introduction
+
+The data used is the downscaling of the ERA-Interim dataset done by FLUXNET.
+
+It includes a correction for local conditions using a linear model and linear interpolation for the reducing downscaling the time measurement.
+
+# Analysis
+
+
+
 ## Tair
+
+The air temperature RMSE is about 1.9 ° C and overall the model is quite good.
+
+The scatter plot is good and by analysing the timeseries the ERA dataset models accurately the overall trend in temperature but misses on the finer scale variation.
+
+In conclusion, while there is still some room for improvement the gap filling is quite good
 
 ```{r, results = 'asis', message = FALSE, echo=FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "Tair", unit="°C")
@@ -84,18 +100,44 @@ knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "Ta
 
 ## SW_IN
 
+The RMSE of the SW_is better, but still has a lot of variation.
+
+This is likely due to the different cloud coverage between local conditions and the overall conditions that the ERA-5 dataset cannot model and which lead sometimes to significant errors (erg. gap sample 5)
+
+
+
 ```{r, results = 'asis', echo = FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "SW_IN", unit="W m-2")
 ```
 
+## LW_IN
+
+The gap filling for LW_IN is okay but not very good.
+
+One key driver of the LW_IN is the amounts of clouds, which is a local condition and likely the main source of errors for LW_IN
+
+
+
+```{r, results = 'asis', echo = FALSE}
+knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "LW_IN", unit="W m-2")
+```
 ## VPD
 
+
+The vapour pressure deficit gap filling is overall good.
+
+The gap filled distribution has a shifted mode and in the sample 4 doesn't follow well the time series
 
 ```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "VPD", unit="hPa")
 ```
 
 ## P
+
+The precipitation intensity is usually underestimated in the ERA dataset.
+
+However, precipitation is a very hard variable and probably the comparison should be on sum over a period on for each observation
+
 
 ```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "P", unit="mm")
@@ -104,7 +146,16 @@ knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "P"
 
 ## PA
 
+The air pressure is simply amazing! The average error is less than the instrument accuracy.
+
+This is expected as the local conditions should have a limited impact on the pressure
 
 ```{r, results = 'asis',  echo = FALSE}
 knit_template("analysis/fragments/variable_assess_ERA_gapfilling.rmd", var = "PA", unit="hPa")
 ```
+
+# Conclusion
+
+The ERA based gap filling has overall a good performance. In particular it gets right the overall trends of the data, which limits the magnitude of the errors, however often doesn't follow precisely local conditions.
+
+This can be a problem especially when filling small gaps.
