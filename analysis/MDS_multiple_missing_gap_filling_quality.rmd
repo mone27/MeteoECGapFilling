@@ -1,0 +1,194 @@
+---
+title: "MDS Multiple Gap Filling Quality assessment"
+output: html_notebook
+---
+```{r, include = FALSE}
+library(tidyverse)
+theme_set(theme_bw())
+library(Metrics)
+library(lubridate)
+library(xfun)
+# parallel execution
+library(furrr)
+n_workers <- 11
+plan(multisession, workers = n_workers)
+
+# number repetition for each gap
+n_rep <-  30
+
+#load_all() doesn't works with futures, so loading only code in R dir
+list.files(here::here("R"), full.names = TRUE) %>%
+  walk(source)
+collapsible_hook() # register the collpasible hook
+
+knitr::opts_chunk$set(echo = FALSE, cache.path = str_glue("cache/hai_{n_rep}/"))
+```
+
+# Introduction
+
+## Marginal Distribution Sampling (MDS)
+
+Assess the quality of the gap filling using the default algorith from `REddyProc`, a standard implementations of meteo gap filling in the Eddy Covariance.
+
+The variables used for filling gaps are, that are used according to the REddyProc default:
+
+- Shortwave radiation incoming `SW_IN`
+- Air Temperature `Tair`
+- Vapour pressure deficit `VPD`
+
+## Analysed variables
+
+The variables that are gap filled are:
+
+- Temperature
+- Shortwave radiation incoming
+- Longwave radiation incoming
+- Vapour Pressure Deficit
+- Pressure
+- Precipitation
+
+
+## Instruments accuracy
+
+In order to estimate the quality of the gap filling the RMSE is compared with the instrument accuracy for the sensors.
+
+The list of instruments available at Hainich is available at [https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H](https://data.icos-cp.eu/objects/_tFsWRgQcO7FkfvOq0OqIC8H)
+
+| Variable            | Instrument      | Accuracy | Reference                                                                                  |
+|---------------------|-----------------|----------|--------------------------------------------------------------------------------------------|
+| Temperature         | Vaisala HMP35   | 0.1 °C   | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
+| Humidity            | Vaisala HMP35   | 0.8% RH  | https://docs.vaisala.com/access/sources/ud/document?aton_code=B211826EN                    |
+| Pressure            | Vaisala PTB101B | 0.3 hPa  | https://www.vaisala.com/sites/default/files/documents/PTB110-Datasheet-B210681EN.pdf       |
+| Precipitation       | OTT Pluvio2     | 0.1mm    | https://www.ott.com/download/leaflet-compact-weighing-precipitation-gauge-ott-pluvio2-s-1/ |
+| Shortwave radiation | DeltaT SPN1     | 10 Wm-2  | https://delta-t.co.uk/wp-content/uploads/2016/10/SPN1-Technical-Fact-Sheet-v1.2_d_web.pdf  |
+
+
+## Load Data
+
+The data from the Eddy Covariance station in Hainich is used for the analysis.
+
+The data is from the FLUXNET 2015 release
+
+```{r}
+hai_path <- here::here("data/FLX_DE-Hai_FLUXNET2015_FULLSET_HH_2000-2012_1-4.csv")
+hai_raw <- read_csv(hai_path, col_types = cols(TIMESTAMP_START = col_datetime(format="%Y%m%d%H%M"), TIMESTAMP_END = col_datetime(format="%Y%m%d%H%M")), na = c("-9999", "-9999.99"))
+```
+```{r}
+meteo_vars <-
+  list(
+    "Tair" = "TA_F",
+    "SW_IN" = "SW_IN_F",
+    "LW_IN" = "LW_IN_F" ,
+    "VPD" = "VPD_F",
+    "P" = "P_F",
+    "PA" = "PA_F"
+  )
+
+meteo_qc <- c(
+  "TA_F_QC", "SW_IN_F_QC", "LW_IN_F_QC",  "VPD_F_QC", "P_F_QC", "PA_F_QC"
+)
+# Note this include the oberservations that are gap filled.
+# REddyProc doesn't work if there are gaps in the timeseries so can't remove them from the dataset
+hai <- hai_raw %>%
+  mutate(
+    Tair = na_if(TA_F, TA_F_QC !=0),
+    SW_IN = na_if(SW_IN_F, SW_IN_F_QC !=0),
+    LW_IN = na_if(LW_IN_F, LW_IN_F_QC != 0),
+    VPD = na_if(VPD_F, VPD_F_QC !=0),
+    P = na_if(P_F, P_F_QC != 0),
+    PA = na_if(PA_F, PA_F_QC != 0)
+  ) %>%
+  select(TIMESTAMP_END, !!!meteo_vars)
+
+site_data <- hai
+```
+
+## RMSE
+
+To have a simple test of the accuracy of the gap filling algorith artificial gaps are created and the Root Mean Square Error (RMSE) is computed.
+
+For each of the variable of interest:
+
+ - **`r n_rep`** gaps for each of 30 different lengths (ranging from 1 hour to 60 days) at random location are generated
+ - the gaps are filled using `REddyProc`
+ - for the gap period RMSE is calculated
+ - for each gap length the RMSE and the standard deviation is calculated
+
+generate artificial gaps and then fill the data using REddyProc.
+```{r}
+# go up to 60 days which is the maximium gap is going to be filled
+# 1.1 is needed because for some unknown reasons, when converting to interger 1 becomes 0 (maybe some floating point related issue)
+gaps_lengths <- seq_log(1.1, 24 * 2 * 30 * 2, offset = 15, length.out = 30) %>%
+  rep(n_rep) %>%
+  as.integer()
+# get 4 gap lengths from the gap (escluding the last one)
+gap_sample_idx <- seq(from = 2, to = length(unique(gaps_lengths)), length.out = 5) %>% as.integer()
+gap_sample <- gaps_lengths[gap_sample_idx[1:4]]
+```
+```{r}
+# run the simulation only for the 4 samples of interest
+gaps_lengths_multi <- gap_sample %>%
+  rep(n_rep) %>%
+  as.integer()
+```
+
+
+
+
+# Multiple missing variables
+
+
+
+
+## Tair
+
+
+
+
+```{r, results = 'asis', message = FALSE, echo=FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "Tair", unit="°C")
+```
+
+## SW_IN
+
+
+
+```{r, results = 'asis', echo = FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "SW_IN", unit="W m-2")
+```
+
+## LW_IN
+
+```{r, results = 'asis', echo = FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "LW_IN", unit="W m-2")
+```
+
+
+## VPD
+
+
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "VPD", unit="hPa")
+```
+
+## P
+
+
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "P", unit="mm")
+```
+
+
+## PA
+
+
+```{r, results = 'asis',  echo = FALSE}
+knit_template("analysis/fragments/MDS_multiple_missing.rmd", var = "PA", unit="hPa")
+```
+
+
+# Conclusion
+
+
