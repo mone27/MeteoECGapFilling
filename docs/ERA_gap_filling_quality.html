@@ -379,7 +379,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-07-03
+<strong>Last updated:</strong> 2022-07-05
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -470,16 +470,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreee23ff4a92a98b53db750edafe147b230e374b2a0targetblanke23ff4aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/e23ff4a92a98b53db750edafe147b230e374b2a0" target="_blank">e23ff4a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree96d3eb810d1271b6f33b5bd8f952af5e6e298410targetblank96d3eb8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/mone27/MeteoECGapFilling/tree/96d3eb810d1271b6f33b5bd8f952af5e6e298410" target="_blank">96d3eb8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtreee23ff4a92a98b53db750edafe147b230e374b2a0targetblanke23ff4aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcommone27MeteoECGapFillingtree96d3eb810d1271b6f33b5bd8f952af5e6e298410targetblank96d3eb8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/e23ff4a92a98b53db750edafe147b230e374b2a0" target="_blank">e23ff4a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/mone27/MeteoECGapFilling/tree/96d3eb810d1271b6f33b5bd8f952af5e6e298410" target="_blank">96d3eb8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -490,8 +490,17 @@ Ignored files:
 
 Untracked files:
     Untracked:  .idea/
-    Untracked:  analysis/MDS_gap_filling_quality_Hyy.rmd
+    Untracked:  R/collapsible_hook.R
+    Untracked:  analysis/MDS_multiple_missing_gap_filling_quality.rmd
+    Untracked:  analysis/fragments/MDS_multiple_missing.rmd
     Untracked:  cache/
+
+Unstaged changes:
+    Modified:   R/REddyProc_tools.R
+    Modified:   R/gaps.R
+    Modified:   analysis/fragments/variable_assess_ERA_gapfilling.rmd
+    Modified:   analysis/fragments/variable_assess_MDS_gapfilling.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -530,6 +539,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/96d3eb810d1271b6f33b5bd8f952af5e6e298410/analysis/ERA_gap_filling_quality.rmd" target="_blank">96d3eb8</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-05
+</td>
+<td>
+added errors for different values
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/mone27/MeteoECGapFilling/04a48c3c0edc35c581db2a06acddb8f5cd8fc2ec/docs/ERA_gap_filling_quality.html" target="_blank">04a48c3</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -673,8 +716,18 @@ Host with GitHub.
 </div>
 </div>
 </div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The data used is the downscaling of the ERA-Interim dataset done by FLUXNET.</p>
+<p>It includes a correction for local conditions using a linear model and linear interpolation for the reducing downscaling the time measurement.</p>
+</div>
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
 <div id="tair" class="section level2">
 <h2>Tair</h2>
+<p>The air temperature RMSE is about 1.9 ° C and overall the model is quite good.</p>
+<p>The scatter plot is good and by analysing the timeseries the ERA dataset models accurately the overall trend in temperature but misses on the finer scale variation.</p>
+<p>In conclusion, while there is still some room for improvement the gap filling is quite good</p>
 <p><a href="variable_exploration.html#Tair"><strong>Variable distribution and details 🔗</strong></a></p>
 <table>
 <tbody>
@@ -765,13 +818,20 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="error-for-different-values" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-10-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
+</p>
+</div>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div id="fig-unnamed-chunk-10-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -790,7 +850,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-9-1.png" target="_blank">a2b35b6</a>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/04a48c3c0edc35c581db2a06acddb8f5cd8fc2ec/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-10-1.png" target="_blank">04a48c3</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-10-1.png" target="_blank">a2b35b6</a>
 </td>
 <td>
 Simone Massaro
@@ -799,26 +870,62 @@ Simone Massaro
 2022-07-02
 </td>
 </tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="distribution-filled-vs-measurements" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/Tair_plot_fill_dist-1.png" alt="Tair distribution of measured and gap filled values." width="672" />
+<p class="caption">
+Tair distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/4ec3c999a1e9864855002eb07aa3ba5f1d2a5315/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-9-1.png" target="_blank">4ec3c99</a>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/04a48c3c0edc35c581db2a06acddb8f5cd8fc2ec/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-11-1.png" target="_blank">04a48c3</a>
 </td>
 <td>
 Simone Massaro
 </td>
 <td>
-2022-07-01
+2022-07-03
 </td>
 </tr>
 <tr>
 <td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/e2a7d9058fdce665746a60f9be8dcdcf5f42096e/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-9-1.png" target="_blank">e2a7d90</a>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-11-1.png" target="_blank">a2b35b6</a>
 </td>
 <td>
 Simone Massaro
 </td>
 <td>
-2022-06-29
+2022-07-02
 </td>
 </tr>
 </tbody>
@@ -826,8 +933,11 @@ Simone Massaro
 </div>
 </div>
 </div>
+</div>
 <div id="sw_in" class="section level2">
 <h2>SW_IN</h2>
+<p>The RMSE of the SW_is better, but still has a lot of variation.</p>
+<p>This is likely due to the different cloud coverage between local conditions and the overall conditions that the ERA-5 dataset cannot model and which lead sometimes to significant errors (erg. gap sample 5)</p>
 <p><a href="variable_exploration.html#SW_IN"><strong>Variable distribution and details 🔗</strong></a></p>
 <table>
 <tbody>
@@ -918,13 +1028,20 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="error-for-different-values-1" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-12-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
+</p>
+</div>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
-Past versions of unnamed-chunk-10-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div id="fig-unnamed-chunk-12-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -943,7 +1060,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-10-1.png" target="_blank">a2b35b6</a>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/04a48c3c0edc35c581db2a06acddb8f5cd8fc2ec/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-12-1.png" target="_blank">04a48c3</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-12-1.png" target="_blank">a2b35b6</a>
 </td>
 <td>
 Simone Massaro
@@ -957,8 +1085,105 @@ Simone Massaro
 </div>
 </div>
 </div>
-<div id="vpd" class="section level2">
-<h2>VPD</h2>
+<div id="distribution-filled-vs-measurements-1" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/SW_IN_plot_fill_dist-1.png" alt="SW_IN distribution of measured and gap filled values." width="672" />
+<p class="caption">
+SW_IN distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/04a48c3c0edc35c581db2a06acddb8f5cd8fc2ec/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-13-1.png" target="_blank">04a48c3</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-03
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-13-1.png" target="_blank">a2b35b6</a>
+</td>
+<td>
+Simone Massaro
+</td>
+<td>
+2022-07-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="lw_in" class="section level2">
+<h2>LW_IN</h2>
+<p>The gap filling for LW_IN is okay but not very good.</p>
+<p>One key driver of the LW_IN is the amounts of clouds, which is a local condition and likely the main source of errors for LW_IN</p>
+<p><a href="variable_exploration.html#LW_IN"><strong>Variable distribution and details 🔗</strong></a></p>
+<table>
+<tbody>
+<tr class="odd">
+<td>Error RMSE</td>
+<td>23 W m-2</td>
+</tr>
+</tbody>
+</table>
+<img src="figure/ERA_gap_filling_quality.rmd/LW_IN_err_dist_plot-1.png" width="672" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/LW_IN_plot_scatter-1.png" alt="LW_IN Measured vs ERA Downscaling using density plots." width="672" />
+<p class="caption">
+LW_IN Measured vs ERA Downscaling using density plots.
+</p>
+</div>
+<div id="error-for-different-values-2" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-14-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
+</p>
+</div>
+</div>
+<div id="distribution-filled-vs-measurements-2" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/LW_IN_plot_fill_dist-1.png" alt="LW_IN distribution of measured and gap filled values." width="672" />
+<p class="caption">
+LW_IN distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /> ## VPD</p>
+<p>The vapour pressure deficit gap filling is overall good.</p>
+<p>The gap filled distribution has a shifted mode and in the sample 4 doesn’t follow well the time series</p>
 <p><a href="variable_exploration.html#VPD"><strong>Variable distribution and details 🔗</strong></a></p>
 <table>
 <tbody>
@@ -1049,47 +1274,31 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
-Past versions of unnamed-chunk-11-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-11-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-11-1.png" target="_blank">a2b35b6</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-07-02
-</td>
-</tr>
-</tbody>
-</table>
 </div>
+<div id="error-for-different-values-3" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-16-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
+</p>
+</div>
+</div>
+<div id="distribution-filled-vs-measurements-3" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/VPD_plot_fill_dist-1.png" alt="VPD distribution of measured and gap filled values." width="672" />
+<p class="caption">
+VPD distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="p" class="section level2">
 <h2>P</h2>
+<p>The precipitation intensity is usually underestimated in the ERA dataset.</p>
+<p>However, precipitation is a very hard variable and probably the comparison should be on sum over a period on for each observation</p>
 <p><a href="variable_exploration.html#P"><strong>Variable distribution and details 🔗</strong></a></p>
 <table>
 <tbody>
@@ -1180,47 +1389,30 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
+<div id="error-for-different-values-4" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-18-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
 </p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-12-1.png" target="_blank">a2b35b6</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-07-02
-</td>
-</tr>
-</tbody>
-</table>
 </div>
+</div>
+<div id="distribution-filled-vs-measurements-4" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/P_plot_fill_dist-1.png" alt="P distribution of measured and gap filled values." width="672" />
+<p class="caption">
+P distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="pa" class="section level2">
 <h2>PA</h2>
+<p>The air pressure is simply amazing! The average error is less than the instrument accuracy.</p>
+<p>This is expected as the local conditions should have a limited impact on the pressure</p>
 <p><a href="variable_exploration.html#PA"><strong>Variable distribution and details 🔗</strong></a></p>
 <table>
 <tbody>
@@ -1311,44 +1503,31 @@ Simone Massaro
 </table>
 </div>
 </div>
-<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
-Past versions of unnamed-chunk-13-1.png
-</button>
+<div id="error-for-different-values-5" class="section level3">
+<h3>Error for different values</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-20-1.png" alt="Distribution of errors for different values of measurements" width="672" />
+<p class="caption">
+Distribution of errors for different values of measurements
 </p>
-<div id="fig-unnamed-chunk-13-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/mone27/MeteoECGapFilling/blob/a2b35b654995ef4566b837e3ce379f9544f3c99d/docs/figure/ERA_gap_filling_quality.rmd/unnamed-chunk-13-1.png" target="_blank">a2b35b6</a>
-</td>
-<td>
-Simone Massaro
-</td>
-<td>
-2022-07-02
-</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
+<div id="distribution-filled-vs-measurements-5" class="section level3">
+<h3>Distribution filled vs measurements</h3>
+<div class="figure" style="text-align: center">
+<img src="figure/ERA_gap_filling_quality.rmd/PA_plot_fill_dist-1.png" alt="PA distribution of measured and gap filled values." width="672" />
+<p class="caption">
+PA distribution of measured and gap filled values.
+</p>
+</div>
+<p><img src="figure/ERA_gap_filling_quality.rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>The ERA based gap filling has overall a good performance. In particular it gets right the overall trends of the data, which limits the magnitude of the errors, however often doesn’t follow precisely local conditions.</p>
+<p>This can be a problem especially when filling small gaps.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
